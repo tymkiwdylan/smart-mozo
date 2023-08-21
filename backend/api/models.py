@@ -21,7 +21,7 @@ class Admin(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     restaurant_id = db.Column(db.Integer, db.ForeignKey('restaurant.id'))
     username = db.Column(db.String(100), unique=True)
-    email = db.Column(db.String(100))
+    email = db.Column(db.String(100), unique=True)
     password = db.Column(db.String(100))
     permission = db.Column(db.Integer) #0: Full permission, 1: View an change, 2: View Only
     
@@ -45,6 +45,7 @@ class Restaurant(db.Model):
     waiters = db.relationship('Waiter')
     cooks  = db.relationship('Cook')
     tables = db.relationship('Table')
+    admins = db.relationship('Admin')
     
     def get_menu(self):
         menu = []
@@ -53,6 +54,14 @@ class Restaurant(db.Model):
             menu.append(plate.serialize());
             
         return menu
+    
+    def get_admins(self):
+        admins = []
+        
+        for admin in self.admins:
+            admins.append(admin.serialize())
+        
+        return admins
     
     def get_transactions(self):
         transactions = []
@@ -90,11 +99,13 @@ class Restaurant(db.Model):
     def serialize(self):
         data = {
             'id': self.id,
+            'restaurant_name': self.restaurant_name,
             'menu': self.get_menu(),
             'transactions': self.get_transactions(),
             'waiters': self.get_waiters(),
             'cooks': self.get_cooks(),
-            'tables': self.get_tables()      
+            'tables': self.get_tables(),
+            'admins': self.get_admins()      
         }
         
 class Menu(db.Model):
