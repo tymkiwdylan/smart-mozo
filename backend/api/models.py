@@ -1,5 +1,11 @@
 from . import db
 
+class SuperAdmin(db.Model): #This is for later
+    id = db.Column(db.Integer, primary_key = True)
+    email = db.Column(db.String(100))
+    username = db.Column(db.String(100))
+    password = db.Column(db.String(100))
+    
 
 class Client(db.Model):
     id = db.Column(db.Integer, primary_key = True)
@@ -23,7 +29,8 @@ class Admin(db.Model):
     username = db.Column(db.String(100), unique=True)
     email = db.Column(db.String(100), unique=True)
     password = db.Column(db.String(100))
-    permission = db.Column(db.Integer) #0: Full permission, 1: View an change, 2: View Only
+    permission = db.Column(db.Integer) #0: Full permission, 1: View and change, 2: View Only
+    api_token = db.Column(db.String(16))
     
     def serialize(self):
         data = {
@@ -31,7 +38,8 @@ class Admin(db.Model):
             'restaurant_id': self.restaurant_id,
             'username': self.username,
             'email': self.email,
-            'permission': self.permission
+            'permission': self.permission,
+            'api_token': self.api_token
         }
         
         return data
@@ -46,6 +54,7 @@ class Restaurant(db.Model):
     cooks  = db.relationship('Cook')
     tables = db.relationship('Table')
     admins = db.relationship('Admin')
+    account_id = db.Column(db.String(20))
     
     def get_menu(self):
         menu = []
@@ -107,6 +116,16 @@ class Restaurant(db.Model):
             'tables': self.get_tables(),
             'admins': self.get_admins()      
         }
+        return data
+    
+    def serialize_user(self):
+        data = {
+            'id': self.id,
+            'restaurant_name': self.restaurant_name,
+            'menu': self.get_menu(),
+            'tables': self.get_tables(),
+        }
+        return data
         
 class Menu(db.Model):
     id = db.Column(db.Integer, primary_key=True)

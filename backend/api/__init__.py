@@ -37,18 +37,21 @@ def create_app():
     app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{DB_NAME}'
     db.init_app(app)
     
-    from .models import Client, Restaurant,Table, Menu, Transaction, Cook, Waiter
+    from .models import Client, Restaurant,Table, Menu, Transaction, Cook, Waiter, Admin
     create_database(app)
 
     from .user_requests import user_requests
     from .admin_requests import admin_requests
-    app.register_blueprint(user_requests, url_prefix='/api/')
-    app.register_blueprint(admin_requests, url_prefix='/api/')
+    from .auth import auth
+    app.register_blueprint(user_requests, url_prefix='/api/client')
+    app.register_blueprint(admin_requests, url_prefix='/api/admin')
+    app.register_blueprint(auth, url_prefix='/api/')
 
 
     return app
 
 def create_database(app):
-    with app.app_context():
-        db.create_all()
-    print('Created Database!')
+    if not (os.path.exists('/instance/database.db')):
+        with app.app_context():
+            db.create_all()
+        print('Created Database!')
