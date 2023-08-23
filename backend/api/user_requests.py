@@ -7,7 +7,7 @@ from .models import Admin, Cook, Menu, Waiter, Table, Restaurant
 
 user_requests = Blueprint('user_requests', __name__)
 
-@user_requests.route('/get-restaurant/<restaurant_id>', methods=['GET'])
+@user_requests.route('/get-rest/<restaurant_id>', methods=['GET'])
 def get_restaurant(restaurant_id):
     restaurant = Restaurant.query.get(int(restaurant_id))
     

@@ -1,4 +1,5 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify
+import io
+from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify, send_file
 from . import db
 from .models import Admin, Cook, Menu, Restaurant, Waiter, Table
 from flask_login import login_required, current_user, login_user, logout_user
@@ -10,7 +11,7 @@ admin_requests = Blueprint('admin_requests', __name__)
 
 def update_menu(items):
     
-    print(items)
+    #TODO: Throw error when headers are incorrect
     
     for item in items:
         plate = Menu.query.filter_by(plate = item['plate'], restaurant_id= item['restaurant_id']).first()
@@ -157,3 +158,30 @@ def get_restaurant(restaurant_id):
     data = restaurant.serialize()
     
     return {'message': 'sueccess', 'data': data}, 200
+
+@admin_requests.route('/get-menu-template/<id>', methods=['GET'])
+def get_menu_template(id):
+    
+    data = {
+    "plate": ["plato1", "plato2", "plato3"],
+    "description": ["Description1", "Description2", "Description3"],
+    "price": [1500, 2000, 4000],
+    "restaurant_id": [id] * 3,
+    "img": ['Dummy'] * 3
+    }
+    
+    df = pd.DataFrame(data)
+    
+    excel_output = io.BytesIO()
+    df.to_excel(excel_output, engine='xlsxwriter', sheet_name='Dishes', index=False)
+
+    excel_output.seek(0)
+
+    return send_file(
+        excel_output,
+        mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        as_attachment=True,
+        download_name='ejemplo.xlsx'
+    )
+    
+    

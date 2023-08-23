@@ -171,7 +171,10 @@ class Waiter(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     restaurant_id = db.Column(db.Integer, db.ForeignKey('restaurant.id'))
     name = db.Column(db.String(50))
+    email = db.Column(db.String(100))
+    password = db.Column(db.String(50))
     transactions = db.relationship('Transaction')
+    account_id = db.Column(db.String(30))
     
     def get_transactions(self):
         transactions = []
@@ -185,6 +188,7 @@ class Waiter(db.Model):
         data = {
             'id': self.id,
             'restaurant_id': self.restaurant_id,
+            'email': self.email,
             'name': self.name,
             'transactions': self.get_transactions(),
         }

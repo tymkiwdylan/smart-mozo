@@ -5,6 +5,7 @@ import {Routes, Route, BrowserRouter as Router} from 'react-router-dom';
 import HomePage from "./pages/HomePage";
 import CreateRestaurantPage from "./pages/CreateRestaurantPage";
 import CreateAdminPage from "./pages/CreateAdminPage";
+import CreateMenuPage from "./pages/CreateMenuPage";
 
 const useStyles = makeStyles({
   app: {
@@ -26,6 +27,7 @@ function App() {
               <Route path="/" element={<HomePage/>}/>
               <Route path="/crear-restaurant" element={<CreateRestaurantPage/>}/>
               <Route path='/crear-admin/:rest_id' element={<CreateAdminPage/>}/>
+              <Route path="/crear-menu/:rest_id" element={<CreateMenuPage/>}/>
             </Routes>
           </Router>
         </div>

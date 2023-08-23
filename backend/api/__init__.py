@@ -43,8 +43,8 @@ def create_app():
     from .user_requests import user_requests
     from .admin_requests import admin_requests
     from .auth import auth
-    app.register_blueprint(user_requests, url_prefix='/api/client')
-    app.register_blueprint(admin_requests, url_prefix='/api/admin')
+    app.register_blueprint(user_requests, url_prefix='/api/')
+    app.register_blueprint(admin_requests, url_prefix='/api/')
     app.register_blueprint(auth, url_prefix='/api/')
 
 

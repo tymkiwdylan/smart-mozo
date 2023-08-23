@@ -44,12 +44,12 @@ def create_admin():
     permission = data['permission']
     restaurant_id = data['restaurant_id']
     
-    admin = Admin.query.filter_by(email=email).first()
+    admin = Admin.query.filter_by(email=email, restaurant_id=restaurant_id).first()
     
     if admin:
         return {'message': 'User already exists'}, 405
     
-    admin = Admin.query.filter_by(permission=0).first()
+    admin = Admin.query.filter_by(permission=0, restaurant_id=restaurant_id).first()
     
     if admin:
         return {'message': 'SuperAdmin already exists. If you forgot your password please reset it.'}, 405
