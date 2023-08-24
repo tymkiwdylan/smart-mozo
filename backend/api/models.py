@@ -49,7 +49,7 @@ class Restaurant(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     restaurant_name = db.Column(db.String(100))
     menu = db.relationship('Menu')
-    transactions = db.relationship('Transaction')
+    transactions = db.relationship('Transaction') #TODO: Think about changing this to be Orders instead of transactions
     waiters = db.relationship('Waiter')
     cooks  = db.relationship('Cook')
     tables = db.relationship('Table')

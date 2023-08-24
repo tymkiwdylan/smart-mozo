@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { TextField, Button, Grid, Paper, Typography} from '@mui/material';
 import { makeStyles } from '@mui/styles';
-import { sendPostRequest } from '../api/apiUtils';
+import { sendPostRequest } from '../../api/apiUtils';
 import { useNavigate } from 'react-router-dom';
 
 const useStyles = makeStyles(() => ({
@@ -27,7 +27,7 @@ const useStyles = makeStyles(() => ({
 
 
 
-const CreateAdmin: React.FC<{ restaurant_id: string }> = ({ restaurant_id }) => {
+const CreateAdmin: React.FC<{ restaurant_id: number|undefined }> = ({ restaurant_id }) => {
   const navigate = useNavigate();
   const classes = useStyles();
   
@@ -48,10 +48,8 @@ const CreateAdmin: React.FC<{ restaurant_id: string }> = ({ restaurant_id }) => 
     };
 
     try {
-      const response: Response = await sendPostRequest(formData, 'create-admin');
-      if (response.ok){
-        navigate('#');
-      }
+      await sendPostRequest(formData, 'create-admin');
+      navigate(`/crear-menu`);
     } catch (error) {
       console.error('Error sending data:', error);
     }

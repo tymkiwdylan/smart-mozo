@@ -1,5 +1,5 @@
 import { Box } from "@mui/material";
-import Home from "../components/Home";
+import Home from "../components/Home/Home";
 
 const HomePage = () =>{
 

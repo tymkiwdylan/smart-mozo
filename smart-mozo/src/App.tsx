@@ -12,7 +12,7 @@ const useStyles = makeStyles({
     width: '100vw',
     height: '100vh',
     overflow: 'hidden', // Prevent scrollbars
-    backgroundColor: '##f2f4f7',
+    backgroundColor: '#f2f4f7',
   },
 });
 
@@ -26,8 +26,8 @@ function App() {
             <Routes>
               <Route path="/" element={<HomePage/>}/>
               <Route path="/crear-restaurant" element={<CreateRestaurantPage/>}/>
-              <Route path='/crear-admin/:rest_id' element={<CreateAdminPage/>}/>
-              <Route path="/crear-menu/:rest_id" element={<CreateMenuPage/>}/>
+              <Route path='/crear-admin/' element={<CreateAdminPage/>}/>
+              <Route path="/crear-menu/" element={<CreateMenuPage/>}/>
             </Routes>
           </Router>
         </div>

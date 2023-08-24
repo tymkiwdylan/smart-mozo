@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { TextField, Button, Grid, Paper, Typography } from '@mui/material';
 import { makeStyles } from '@mui/styles';
-import { sendPostRequest } from '../api/apiUtils';
+import { sendPostRequest } from '../../api/apiUtils';
 import { useNavigate } from 'react-router-dom';
+import { useAppDispatch } from '../../store/hooks';
+import { fetchRestaurantData } from '../../store/restaurantActions';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -27,6 +29,7 @@ const useStyles = makeStyles(() => ({
 
 const CreateRestaurant: React.FC = () => {
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   const classes = useStyles();
   const [restaurantName, setRestaurantName] = useState('');
   const [appID, setAppID] = useState('');
@@ -43,7 +46,8 @@ const CreateRestaurant: React.FC = () => {
         const response: any = await sendPostRequest(formData, 'create-restaurant');     
         const restaurant_id = response['data']['id'];
 
-        navigate(`/crear-admin/${restaurant_id}`);
+        await dispatch(fetchRestaurantData(restaurant_id));
+        navigate(`/crear-admin`);
       
     } catch (error) {
       console.error('Error sending data:', error);
@@ -81,3 +85,4 @@ const CreateRestaurant: React.FC = () => {
 };
 
 export default CreateRestaurant;
+

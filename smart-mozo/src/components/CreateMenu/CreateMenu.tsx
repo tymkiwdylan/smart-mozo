@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Button, FormControl, FormHelperText, Grid, Input, InputLabel, Paper, Typography } from '@mui/material';
 import { makeStyles } from '@mui/styles';
-import { sendPostRequest } from '../api/apiUtils';
+import { sendPostRequest } from '../../api/apiUtils';
 import { useNavigate } from 'react-router-dom';
 
 const useStyles = makeStyles(() => ({
@@ -30,7 +30,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const CreateMenu: React.FC<{ restaurant_id: string }> = ({ restaurant_id }) => {
+const CreateMenu: React.FC<{ restaurant_id: number|undefined }> = ({ restaurant_id }) => {
   const navigate = useNavigate();
   const classes = useStyles();
 
@@ -50,7 +50,7 @@ const CreateMenu: React.FC<{ restaurant_id: string }> = ({ restaurant_id }) => {
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
-    if (file) {
+    if (file && restaurant_id) { //TODO: Handle error if restaurant_id is undefined
       // Create a FormData object
       const formData = new FormData();
   
@@ -58,7 +58,7 @@ const CreateMenu: React.FC<{ restaurant_id: string }> = ({ restaurant_id }) => {
       formData.append('file', file);
   
       // Append other form data properties as needed
-      formData.append('restaurant_id', restaurant_id);
+      formData.append('restaurant_id', restaurant_id.toString());
   
       try {
         const response: Response = await sendPostRequest(formData, 'create-menu');

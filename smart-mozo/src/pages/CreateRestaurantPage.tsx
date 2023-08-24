@@ -1,5 +1,5 @@
 import { Box } from "@mui/material"
-import CreateRestaurant from "../components/CreateRestaurant"
+import CreateRestaurant from "../components/CreateRestaurant/CreateRestaurant"
 
 
 const CreateRestaurantPage = () =>{
