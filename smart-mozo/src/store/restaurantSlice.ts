@@ -3,11 +3,18 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface RestaurantState {
-  restaurant: Restaurant | null;
+  restaurant: Restaurant;
 }
 
 const initialState: RestaurantState = {
-  restaurant: null,
+  restaurant: {
+    id: 0,
+    restaurant_name: '',
+    menu: [],
+    waiters: [],
+    cooks: [],
+    tables: [],
+  },
 };
 
 // Try to load the restaurant data from local storage

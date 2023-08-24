@@ -16,10 +16,10 @@ declare global {
 
   interface MenuItem {
     id: number;
-    plateName: string;
+    plate: string;
     description: string;
     price: number;
-    image: string;
+    img: string;
   }
 
   interface Waiter {

@@ -6,12 +6,11 @@ import HomePage from "./pages/HomePage";
 import CreateRestaurantPage from "./pages/CreateRestaurantPage";
 import CreateAdminPage from "./pages/CreateAdminPage";
 import CreateMenuPage from "./pages/CreateMenuPage";
+import AdminPanel from "./pages/AdminPanel";
 
 const useStyles = makeStyles({
   app: {
     width: '100vw',
-    height: '100vh',
-    overflow: 'hidden', // Prevent scrollbars
     backgroundColor: '#f2f4f7',
   },
 });
@@ -28,6 +27,7 @@ function App() {
               <Route path="/crear-restaurant" element={<CreateRestaurantPage/>}/>
               <Route path='/crear-admin/' element={<CreateAdminPage/>}/>
               <Route path="/crear-menu/" element={<CreateMenuPage/>}/>
+              <Route path="/admin/" element={<AdminPanel/>}/>
             </Routes>
           </Router>
         </div>

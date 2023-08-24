@@ -1,12 +1,13 @@
-import { Box } from "@mui/material";
 import Home from "../components/Home/Home";
+import PageContainer from "../components/PageContainer/PageContainer";
 
 const HomePage = () =>{
 
     return(
-        <Box>
+        <PageContainer title='Home'>
             <Home/>
-        </Box>
+        </PageContainer>
+
     );
 }
 

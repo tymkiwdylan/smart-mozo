@@ -9,19 +9,19 @@ import pandas as pd
 
 admin_requests = Blueprint('admin_requests', __name__)
 
-def update_menu(items):
+def update_menu(items, restaurant_id):
     
     #TODO: Throw error when headers are incorrect
     
     for item in items:
-        plate = Menu.query.filter_by(plate = item['plate'], restaurant_id= item['restaurant_id']).first()
+        plate = Menu.query.filter_by(plate = item['plate'], restaurant_id = restaurant_id).first()
         if plate:
             plate.description = item['description']
             plate.price = item['price']
             plate.img = item['img']
         else:
             new_plate = Menu(plate=item['plate'], description= item['description'],
-                             restaurant_id=item['restaurant_id'], img=item['img'], price=item['price'])
+                             restaurant_id=restaurant_id, img=item['img'], price=item['price'])
             db.session.add(new_plate)
         
     db.session.commit()
@@ -47,9 +47,10 @@ def create_menu_item():
     print(data)
     
     items = data['items']
+    restaurant_id = data['restaurant_id']
     
     if len(items) != 0:
-        update_menu(items)
+        update_menu(items, restaurant_id)
     
     return {'message': 'success'}, 201
 
@@ -61,16 +62,17 @@ def create_menu():
     #     return {'message': 'NOT AUTHORIZED'}, 401
     
     file = request.files['file']
+    restaurant_id = request.form['restaurant_id']
     
     if file and file.filename.endswith('.xlsx'):
         df = pd.read_excel(file)
         data = df.to_dict(orient='records')
-        update_menu(data)
+        update_menu(data, restaurant_id)
     
     if file and file.filename.endswith('.csv'):
         df = pd.read_csv(file)
         data = df.to_dict(orient='records')
-        update_menu(data)
+        update_menu(data, restaurant_id)
     
     return {'message': 'success'}, 201
     

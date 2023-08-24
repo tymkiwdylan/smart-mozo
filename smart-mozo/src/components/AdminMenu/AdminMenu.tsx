@@ -54,13 +54,13 @@ const ItemList: React.FC<Props> = ({ items, onDeleteItem }) => {
             <ListItem>
               <CardMedia
                 component="img"
-                alt={item.plateName}
+                alt={item.plate}
                 style={{ width: '200', height: '100', objectFit: 'cover' }}
-                image={item.image}
+                image={item.img}
               />
               <CardContent>
                 <ListItemText
-                  primary={item.plateName}
+                  primary={item.plate}
                   secondary={`Price: $${item.price.toFixed(2)}`}
                 />
                 <ListItemText primary={item.description} />
