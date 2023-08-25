@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import AdminMenu from "../components/AdminMenu/AdminMenu";
 import PageContainer from "../components/PageContainer/PageContainer";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
@@ -16,18 +16,25 @@ const AdminPanel = () =>{
     }      
     , []);
 
-    const items = restaurantData.menu;
+    const [items, setItems] = useState<MenuItem[]>(restaurantData.menu);
 
     const handleDeleteItem = (menuItem: MenuItem) => {
         //Delete item from backend
         console.log('Deleting item: ', menuItem);
     }
 
+    const handleEditItem = (updatedItem: MenuItem) => {
+        const updatedItems = items.map(item =>
+            item.id === updatedItem.id ? updatedItem : item
+          );
+          setItems(updatedItems);
+    }
+
     console.log(restaurantData);
 
     return(
-        <PageContainer title='Home'>
-            <AdminMenu items={items} onDeleteItem={handleDeleteItem} />
+        <PageContainer title='Panel Administrativo'>
+            <AdminMenu items={items} onDeleteItem={handleDeleteItem} onEditItem={handleEditItem} />
         </PageContainer>
 
     );

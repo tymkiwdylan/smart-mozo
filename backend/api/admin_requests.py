@@ -1,4 +1,6 @@
 import io
+import os
+from urllib.parse import urljoin
 from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify, send_file
 from . import db
 from .models import Admin, Cook, Menu, Restaurant, Waiter, Table
@@ -26,6 +28,19 @@ def update_menu(items, restaurant_id):
         
     db.session.commit()
     
+def save_file(file):
+    
+    filename = file.filename
+    data = file.read()
+
+    path = os.path.join('api/static/restaurantImages', filename)
+    with open(path, 'wb') as f:
+        f.write(data)
+
+    url = urljoin(request.url_root, 'static/restaurantImages/' + filename)
+
+    return url
+    
 def isValidToken(token):
     if len(token) == 0:
         return False
@@ -34,25 +49,47 @@ def isValidToken(token):
         return True
     return False
 
-    
 
-@admin_requests.route('/create-menu-item', methods=['POST'])
-def create_menu_item():
+@admin_requests.route('/edit-menu-item', methods=['POST'])
+def edit_menu_item():
     # token = request.headers['Authorization']
-
     # if (not isValidToken(token)):
     #     return {'message': 'NOT AUTHORIZED'}, 401
     
-    data = request.get_json(force=True)
-    print(data)
+    data = request.form
     
-    items = data['items']
+    plate_name = data['plate']
+    description = data['description']
+    price = data['price']
+    id = data['id']
     restaurant_id = data['restaurant_id']
     
-    if len(items) != 0:
-        update_menu(items, restaurant_id)
+    plate = Menu.query.get(int(id))
+
+    img = '' #TODO: Link this to a dummy image
+    # Check if a file was included in the request
+    if 'file' in request.files:
+        file = request.files['file']
+        img = save_file(file)
     
-    return {'message': 'success'}, 201
+    if not plate:
+        plate = Menu(plate=plate_name, description=description,
+                         price=price, restaurant_id=restaurant_id,
+                         img=img)
+        db.session.add(plate)
+    else:
+        plate.plate = plate_name
+        plate.description = description
+        plate.price = price
+        plate.img = img
+    
+    db.session.commit()
+    
+    return {'message': 'success', 'data': plate.serialize()}, 201
+
+    
+    
+    
 
 @admin_requests.route('/create-menu', methods=['POST'])
 def create_menu():
@@ -66,7 +103,7 @@ def create_menu():
     
     if file and file.filename.endswith('.xlsx'):
         df = pd.read_excel(file)
-        data = df.to_dict(orient='records')
+        data = df.to_dict(orient='records') #TODO: THink about how to handle images when using excel
         update_menu(data, restaurant_id)
     
     if file and file.filename.endswith('.csv'):

@@ -7,7 +7,7 @@ const Home = () =>{
     console.log(theme.palette.secondary);
 
     return(
-    <Box>
+    <Box sx={{height: '100vh'}}>
         <h1 style={{color: theme.palette.secondary.main }}>Hello World</h1>
     </Box>
     );

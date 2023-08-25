@@ -8,9 +8,10 @@ import { sendPostRequest } from '../../api/apiUtils';
 interface Props {
   items: MenuItem[];
   onDeleteItem: (item: MenuItem) => void;
+  onEditItem: (item: MenuItem) => void;
 }
 
-const ItemList: React.FC<Props> = ({ items, onDeleteItem }) => {
+const ItemList: React.FC<Props> = ({ items, onDeleteItem, onEditItem }) => {
   const [openModal, setOpenModal] = useState(false);
   const [selectedItem, setSelectedItem] = useState<MenuItem | null>(null);
 
@@ -26,18 +27,28 @@ const ItemList: React.FC<Props> = ({ items, onDeleteItem }) => {
 
   const handleSubmit = async (formData: any) => {
     //Send formData to backend
+    const data = new FormData();
+    data.append('file', formData.image);
+    data.append('plate', formData.plateName);
+    data.append('description', formData.description);
+    data.append('price', formData.price);
+    data.append('restaurant_id', formData.restaurant_id);
+    data.append('id', formData.id);
     try {
-      const response = await sendPostRequest(formData, '/create-menu-item');
+      const response = await sendPostRequest(data, 'edit-menu-item');
       console.log(response);
+      onEditItem(response.data);
     }
     catch (error) {
       console.log(error);
     }
+
   };
 
   return (
     <Box>
         <Button
+        color='secondary'
         variant="outlined"
         startIcon={<Add />}
         onClick={() => {
@@ -50,12 +61,12 @@ const ItemList: React.FC<Props> = ({ items, onDeleteItem }) => {
       </Button>
       <List>
         {items.map(item => (
-          <Card key={item.id} style={{ marginBottom: '10px' }}>
+          <Card key={item.id} style={{ marginBottom: '10px', borderRadius: '8px' }}>
             <ListItem>
               <CardMedia
                 component="img"
                 alt={item.plate}
-                style={{ width: '200', height: '100', objectFit: 'cover' }}
+                style={{ maxWidth: '200px', maxHeight: '100px', objectFit: 'cover' }}
                 image={item.img}
               />
               <CardContent>
@@ -77,9 +88,9 @@ const ItemList: React.FC<Props> = ({ items, onDeleteItem }) => {
           </Card>
         ))}
       </List>
-      {selectedItem && (
-        <EditMenu open={openModal} onClose={handleCloseModal} onSubmit={handleSubmit} plate={selectedItem} />
-      )}
+        {selectedItem && (
+          <EditMenu open={openModal} onClose={handleCloseModal} onSubmit={handleSubmit} plate={selectedItem} />
+        )}
     </Box>
   );
 };
