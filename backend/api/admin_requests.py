@@ -113,7 +113,62 @@ def create_menu():
     
     return {'message': 'success'}, 201
     
+@admin_requests.route('/delete-menu-item', methods=['POST'])
+def delete_menu_item():
+    # token = request.headers['Authorization']
+
+    # if (not isValidToken(token)):
+    #     return {'message': 'NOT AUTHORIZED'}, 401
     
+    data = request.get_json(force=True)
+    
+    id = data['id']
+    
+    plate = Menu.query.get(int(id))
+    
+    if plate:
+        db.session.delete(plate)
+        db.session.commit()
+    
+    return {'message': 'success', 'data': {'id': id}}, 201
+
+@admin_requests.route('/delete-waiter', methods=['POST'])
+def delete_waiter():
+    # token = request.headers['Authorization']
+
+    # if (not isValidToken(token)):
+    #     return {'message': 'NOT AUTHORIZED'}, 401
+    
+    data = request.get_json(force=True)
+    
+    id = data['id']
+    
+    waiter = Waiter.query.get(int(id))
+    
+    if waiter:
+        db.session.delete(waiter)
+        db.session.commit()
+    
+    return {'message': 'success', 'data': {'id': id}}, 201
+
+@admin_requests.route('/delete-cook', methods=['POST'])
+def delete_cook():
+    # token = request.headers['Authorization']
+
+    # if (not isValidToken(token)):
+    #     return {'message': 'NOT AUTHORIZED'}, 401
+    
+    data = request.get_json(force=True)
+    
+    id = data['id']
+    
+    cook = Cook.query.get(int(id))
+    
+    if cook:
+        db.session.delete(cook)
+        db.session.commit()
+    
+    return {'message': 'success', 'data': {'id': id}}, 201
     
 @admin_requests.route('/add-waiter', methods=['POST'])
 def add_waiter():
@@ -125,19 +180,22 @@ def add_waiter():
     data = request.get_json(force=True)
     
     restaurant_id = data['restaurant_id']
+    id = data['id']
     name = data['name']
+    email = data['email']
     
-    waiter = Waiter.query.filter_by(name=name, restaurant_id=restaurant_id).first()
+    waiter = Waiter.query.get(int(id))
     
-    if waiter:
-        return {'message': 'Waiter already exists'}, 405
-    
-    new_waiter = Waiter(name=name, restaurant_id=restaurant_id)
-    
-    db.session.add(new_waiter)
+    if not waiter:
+        waiter = Waiter(name=name, restaurant_id=restaurant_id, email=email)
+        db.session.add(waiter)
+    else:
+        waiter.name = name
+        waiter.email = email
+        
     db.session.commit()
     
-    return {'message': 'success'}, 201
+    return {'message': 'success', 'data': waiter.serialize()}, 201
 
 @admin_requests.route('/add-cook', methods=['POST'])
 def add_cook():
@@ -149,19 +207,21 @@ def add_cook():
     data = request.get_json(force=True)
     
     restaurant_id = data['restaurant_id']
+    id = data['id']
     name = data['name']
     
-    cook = Cook.query.filter_by(name=name, restaurant_id=restaurant_id).first()
+    cook = Cook.query.get(int(id))
     
-    if cook:
-        return {'message': 'Waiter already exists'}, 405
+    if not cook:
+         cook = Cook(name=name, restaurant_id=restaurant_id)
+         db.session.add(cook)
     
-    new_cook = Cook(name=name, restaurant_id=restaurant_id)
+    else:
+        cook.name = name
     
-    db.session.add(new_cook)
     db.session.commit()
     
-    return {'message': 'success'}, 201
+    return {'message': 'success', 'data': cook.serialize()}, 201
 
 @admin_requests.route('/add-table', methods=['POST'])
 def add_table():

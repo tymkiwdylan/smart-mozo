@@ -16,6 +16,7 @@ declare global {
 
   interface MenuItem {
     id: number;
+    restaurant_id: number;
     plate: string;
     description: string;
     price: number;
@@ -24,17 +25,20 @@ declare global {
 
   interface Waiter {
     id: number;
+    restaurant_id: number;
     name: string;
     email: string;
   }
 
   interface Cook {
     id: number;
+    restaurant_id: number;
     name: string;
   }
 
   interface Table {
     id: number;
+    restaurant_id: number;
   }
 
 }

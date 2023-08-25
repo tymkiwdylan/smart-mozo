@@ -12,6 +12,8 @@ const useStyles = makeStyles({
   app: {
     width: '100vw',
     backgroundColor: '#f2f4f7',
+    height: '100vh',
+    overflow: 'hidden',
   },
 });
 

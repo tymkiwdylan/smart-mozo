@@ -39,8 +39,6 @@ const EditMenu: React.FC<PlateFormProps> = ({
 
   const restaurant_id = useAppSelector(state => state.restaurant.restaurant.id);
 
-  console.log(restaurant_id);
-
   const [formData, setFormData] = useState<PlateFormData>({
     id: 0,
     restaurant_id: restaurant_id,
@@ -62,7 +60,6 @@ const EditMenu: React.FC<PlateFormProps> = ({
       });
     }
   }, [plate]);
-  console.log('THis is working');
   const handleInputChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {

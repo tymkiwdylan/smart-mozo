@@ -27,7 +27,7 @@ const PageContainer: React.FC<PageContainerProps> = ({ title, children }) => {
 
   return (
     <div className="page-container">
-      <AppBar position="static">
+      <AppBar position="fixed">
         <Toolbar className='top-bar'>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             {title}
@@ -59,7 +59,7 @@ const PageContainer: React.FC<PageContainerProps> = ({ title, children }) => {
           </Menu>
         </Toolbar>
       </AppBar>
-      <Container sx={{ paddingTop: '2rem', paddingBottom: '2rem' }}>
+      <Container sx={{ paddingTop: '2rem', paddingBottom: '2rem', background: '#f2f4f7', width: '100vw'}}>
         {children}
       </Container>
     </div>

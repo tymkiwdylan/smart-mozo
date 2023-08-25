@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { List, ListItem, ListItemText, ListItemSecondaryAction, IconButton, Card, CardContent, CardMedia, Box, Button } from '@mui/material';
 import { Edit, Delete, Add } from '@mui/icons-material';
-import EditMenu from '../EditMenu/EditMenu';
+import EditMenu from './EditMenu';
 import { sendPostRequest } from '../../api/apiUtils';
 
 
@@ -9,11 +9,13 @@ interface Props {
   items: MenuItem[];
   onDeleteItem: (item: MenuItem) => void;
   onEditItem: (item: MenuItem) => void;
+  onAddItem: (item: MenuItem) => void;
 }
 
-const ItemList: React.FC<Props> = ({ items, onDeleteItem, onEditItem }) => {
+const ItemList: React.FC<Props> = ({ items, onDeleteItem, onEditItem, onAddItem }) => {
   const [openModal, setOpenModal] = useState(false);
   const [selectedItem, setSelectedItem] = useState<MenuItem | null>(null);
+  const [isNewItem, setIsNewItem] = useState(false);
 
   const handleEditItem = (item: MenuItem|null) => {
     setSelectedItem(item);
@@ -36,8 +38,14 @@ const ItemList: React.FC<Props> = ({ items, onDeleteItem, onEditItem }) => {
     data.append('id', formData.id);
     try {
       const response = await sendPostRequest(data, 'edit-menu-item');
-      console.log(response);
+
+      if (isNewItem) {
+        onAddItem(response.data);
+        setIsNewItem(false);
+      }
+      else {
       onEditItem(response.data);
+      }
     }
     catch (error) {
       console.log(error);
@@ -46,13 +54,22 @@ const ItemList: React.FC<Props> = ({ items, onDeleteItem, onEditItem }) => {
   };
 
   return (
-    <Box>
+    <Box
+        sx={{
+          width: 350,
+          maxHeight: '85vh',
+          height: '100vh',
+          overflowY: 'scroll',
+          scrollbarColor: '#f2f4f7 #f2f4f7',
+          }}
+    >
         <Button
         color='secondary'
         variant="outlined"
         startIcon={<Add />}
         onClick={() => {
           setSelectedItem(null);
+          setIsNewItem(true);
           handleEditItem(selectedItem);
         }}
         style={{ marginBottom: '10px' }}
