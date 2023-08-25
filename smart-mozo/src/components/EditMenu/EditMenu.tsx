@@ -4,13 +4,14 @@ import {
   Modal,
   Box,
   TextField,
-  TextareaAutosize,
   Button,
   IconButton,
   InputLabel,
-  Input
+  Input,
+  TextareaAutosize
 } from "@mui/material";
 import { AddPhotoAlternate } from "@mui/icons-material";
+import { useAppSelector } from "../../store/hooks";
 
 interface PlateFormProps {
   open: boolean;
@@ -20,6 +21,8 @@ interface PlateFormProps {
 }
 
 interface PlateFormData {
+  id: number;
+  restaurant_id: number;
   plateName: string;
   description: string;
   price: number;
@@ -33,7 +36,12 @@ const EditMenu: React.FC<PlateFormProps> = ({
   onClose,
   onSubmit
 }) => {
+
+  const restaurant_id = useAppSelector(state => state.restaurant.restaurant.id);
+
   const [formData, setFormData] = useState<PlateFormData>({
+    id: 0,
+    restaurant_id: restaurant_id,
     plateName: "",
     description: "",
     price: 0,
@@ -43,10 +51,12 @@ const EditMenu: React.FC<PlateFormProps> = ({
   useEffect(() => {
     if (plate) {
       setFormData({
-        plateName: plate.plateName,
+        id: plate.id,
+        restaurant_id: restaurant_id,
+        plateName: plate.plate,
         description: plate.description,
         price: plate.price,
-        image: typeof plate.image === "string" ? plate.image : null
+        image: typeof plate.img === "string" ? plate.img : null
       });
     }
   }, [plate]);
@@ -70,14 +80,22 @@ const EditMenu: React.FC<PlateFormProps> = ({
     }));
   };
 
+
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
     onSubmit(formData);
+    onClose();
+
   };
 
   return (
-    <Modal open={open} onClose={onClose}>
-      <Box>
+    <Modal open={open} onClose={onClose} style={{
+      borderRadius: '8px',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+       }}>
+      <Box sx={{ p: 3, bgcolor: 'background.paper', borderRadius: 4 }}>
         <h2>{plate ? 'Editar Plato' : 'Nuevo Plato'}</h2>
         <form onSubmit={handleSubmit}>
           <Grid container spacing={2}>
@@ -102,7 +120,7 @@ const EditMenu: React.FC<PlateFormProps> = ({
                           : URL.createObjectURL(formData.image)
                       }
                       alt="Uploaded"
-                      style={{ maxWidth: "100%", maxHeight: "100%" }}
+                      style={{ maxWidth: "200px", maxHeight: "100px" }}
                     />
                   ) : (
                     <IconButton component="span">
@@ -121,13 +139,18 @@ const EditMenu: React.FC<PlateFormProps> = ({
             </Grid>
             <Grid item xs={12} sm={12} md={12}>
               <TextareaAutosize
-                style={{ width: "100%", marginTop: 2 }}
+                style={{ width: "100%",
+                marginTop: 2,
+                backgroundColor: 'white',
+                color: 'black',
+                resize: 'none',
+                borderRadius: 4,
+              }}
                 minRows={6}
                 placeholder="Description"
                 name="description"
                 value={formData.description}
                 onChange={handleInputChange}
-                required
               />
             </Grid>
             <Grid item xs={12} sm={12} md={12}>
