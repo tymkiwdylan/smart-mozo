@@ -15,7 +15,7 @@ const ItemList: React.FC<Props> = ({ items, onDeleteItem, onEditItem }) => {
   const [openModal, setOpenModal] = useState(false);
   const [selectedItem, setSelectedItem] = useState<MenuItem | null>(null);
 
-  const handleEditItem = (item: MenuItem) => {
+  const handleEditItem = (item: MenuItem|null) => {
     setSelectedItem(item);
     setOpenModal(true);
   };
@@ -52,8 +52,8 @@ const ItemList: React.FC<Props> = ({ items, onDeleteItem, onEditItem }) => {
         variant="outlined"
         startIcon={<Add />}
         onClick={() => {
-          setSelectedItem(null); // Reset selectedItem when adding a new item
-          setOpenModal(true);
+          setSelectedItem(null);
+          handleEditItem(selectedItem);
         }}
         style={{ marginBottom: '10px' }}
       >
@@ -88,9 +88,9 @@ const ItemList: React.FC<Props> = ({ items, onDeleteItem, onEditItem }) => {
           </Card>
         ))}
       </List>
-        {selectedItem && (
-          <EditMenu open={openModal} onClose={handleCloseModal} onSubmit={handleSubmit} plate={selectedItem} />
-        )}
+        
+      <EditMenu open={openModal} onClose={handleCloseModal} onSubmit={handleSubmit} plate={selectedItem} />
+
     </Box>
   );
 };

@@ -32,12 +32,14 @@ interface PlateFormData {
 //Component starts here
 const EditMenu: React.FC<PlateFormProps> = ({
   open,
-  plate = null,
+  plate,
   onClose,
   onSubmit
 }) => {
 
   const restaurant_id = useAppSelector(state => state.restaurant.restaurant.id);
+
+  console.log(restaurant_id);
 
   const [formData, setFormData] = useState<PlateFormData>({
     id: 0,
@@ -60,7 +62,7 @@ const EditMenu: React.FC<PlateFormProps> = ({
       });
     }
   }, [plate]);
-
+  console.log('THis is working');
   const handleInputChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -84,9 +86,21 @@ const EditMenu: React.FC<PlateFormProps> = ({
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
     onSubmit(formData);
-    onClose();
+    handleClose();
 
   };
+
+  const handleClose = () => {
+    setFormData({
+      id: 0,
+      restaurant_id: restaurant_id,
+      plateName: "",
+      description: "",
+      price: 0,
+      image: null
+    });
+    onClose();
+  }
 
   return (
     <Modal open={open} onClose={onClose} style={{
@@ -166,7 +180,7 @@ const EditMenu: React.FC<PlateFormProps> = ({
             </Grid>
           </Grid>
           <div style={{ marginTop: "1rem", display: "flex", justifyContent: "space-between" }}>
-            <Button variant="outlined" onClick={onClose}>
+            <Button variant="contained" onClick={handleClose}>
               Cancelar
             </Button>
             <Button variant="contained" type="submit">
