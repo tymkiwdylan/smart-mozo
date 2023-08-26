@@ -30,7 +30,7 @@ const ItemList: React.FC<Props> = ({ items, onDeleteItem, onEditItem, onAddItem 
   const handleSubmit = async (formData: any) => {
     //Send formData to backend
     try {
-      const response = await sendPostRequest(formData, 'add-cook');
+      const response = await sendPostRequest(formData, 'cook/add-cook');
       console.log(isNewItem);
       if (isNewItem) {
         console.log('Adding new cook: ', response.data);

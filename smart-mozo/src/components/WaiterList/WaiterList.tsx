@@ -30,7 +30,7 @@ const ItemList: React.FC<Props> = ({ items, onDeleteItem, onEditItem, onAddItem 
   const handleSubmit = async (formData: any) => {
     //Send formData to backend
     try {
-      const response = await sendPostRequest(formData, 'add-waiter');
+      const response = await sendPostRequest(formData, 'waiter/add-waiter');
 
       if (isNewItem) {
         onAddItem(response.data);

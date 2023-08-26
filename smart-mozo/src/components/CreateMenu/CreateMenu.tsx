@@ -61,7 +61,7 @@ const CreateMenu: React.FC<{ restaurant_id: number|undefined }> = ({ restaurant_
       formData.append('restaurant_id', restaurant_id.toString());
   
       try {
-        const response: Response = await sendPostRequest(formData, 'create-menu');
+        const response: Response = await sendPostRequest(formData, 'menu/create-menu');
         if (response.ok) {
           navigate('#');
         }

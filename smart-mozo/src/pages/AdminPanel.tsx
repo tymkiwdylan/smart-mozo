@@ -34,7 +34,7 @@ const AdminPanel = () => {
         //Delete item from backend
         console.log('Deleting item: ', menuItem);
         try {
-            sendPostRequest(menuItem, 'delete-menu-item');
+            sendPostRequest(menuItem, 'menu/delete-menu-item');
             const updatedItems = menu.filter(item => item.id !== menuItem.id);
             setMenu(updatedItems);
         }
@@ -48,7 +48,7 @@ const AdminPanel = () => {
         console.log('Deleting item: ', waiter);
 
         try {
-            sendPostRequest(waiter, 'delete-waiter');
+            sendPostRequest(waiter, 'waiter/delete-waiter');
             const updatedItems = waiters.filter(item => item.id !== waiter.id);
             setWaiters(updatedItems);
         }
@@ -63,7 +63,7 @@ const AdminPanel = () => {
         console.log('Deleting item: ', cook);
 
         try {
-            sendPostRequest(cook, 'delete-cook');
+            sendPostRequest(cook, 'cook/delete-cook');
             const updatedItems = cooks.filter(item => item.id !== cook.id);
             setCooks(updatedItems);
         }

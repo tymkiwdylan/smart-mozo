@@ -1,4 +1,4 @@
-from . import db
+from api import db
 
 class SuperAdmin(db.Model): #This is for later
     id = db.Column(db.Integer, primary_key = True)
@@ -149,7 +149,7 @@ class Menu(db.Model):
 class Transaction(db.Model):
     id = db.Column(db.Integer, primary_key= True)
     restaurant_id = db.Column(db.Integer, db.ForeignKey('restaurant.id'))
-    product_id = db.Column(db.Integer) #TODO: Make foreign key
+    product_id = db.Column(db.Integer) #TODO: change into a String and call description
     amount = db.Column(db.Integer)
     payment_method = db.Column(db.String(100))
     receipt = db.Column(db.String(100))
@@ -217,3 +217,17 @@ class Table(db.Model):
             'restaurant_id': self.restaurant_id,
         }
         return data
+    
+    
+    
+_all__ = [
+    "SuperAdmin",
+    "Client",
+    "Admin",
+    "Restaurant",
+    "Menu",
+    "Transaction",
+    "Waiter",
+    "Cook",
+    "Table",
+]

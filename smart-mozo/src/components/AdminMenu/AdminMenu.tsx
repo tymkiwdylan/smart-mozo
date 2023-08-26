@@ -37,7 +37,7 @@ const ItemList: React.FC<Props> = ({ items, onDeleteItem, onEditItem, onAddItem 
     data.append('restaurant_id', formData.restaurant_id);
     data.append('id', formData.id);
     try {
-      const response = await sendPostRequest(data, 'edit-menu-item');
+      const response = await sendPostRequest(data, 'menu/edit-menu-item');
 
       if (isNewItem) {
         onAddItem(response.data);

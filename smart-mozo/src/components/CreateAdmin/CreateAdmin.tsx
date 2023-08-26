@@ -48,7 +48,7 @@ const CreateAdmin: React.FC<{ restaurant_id: number|undefined }> = ({ restaurant
     };
 
     try {
-      await sendPostRequest(formData, 'create-admin');
+      await sendPostRequest(formData, 'auth/create-admin');
       navigate(`/crear-menu`);
     } catch (error) {
       console.error('Error sending data:', error);
