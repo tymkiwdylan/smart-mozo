@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { TextField, Button, Grid, Paper, Typography } from '@mui/material';
 import { makeStyles } from '@mui/styles';
-import { sendPostRequest } from '../../api/apiUtils';
+import { sendPostRequest } from '../../../api/apiUtils';
 import { useNavigate } from 'react-router-dom';
-import { useAppDispatch } from '../../store/hooks';
-import { fetchRestaurantData } from '../../store/restaurantActions';
+import { useAppDispatch } from '../../../store/hooks';
+import { fetchRestaurantData } from '../../../store/restaurantActions';
 
 const useStyles = makeStyles(() => ({
   root: {

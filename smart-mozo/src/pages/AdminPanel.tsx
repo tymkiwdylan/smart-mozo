@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-import AdminMenu from "../components/AdminMenu/AdminMenu";
+import AdminMenu from "../components/AdminView/AdminMenu/AdminMenu";
 import PageContainer from "../components/PageContainer/PageContainer";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
 import { fetchRestaurantData } from "../store/restaurantActions";
-import WaiterList from "../components/WaiterList/WaiterList";
-import CookList from "../components/CookList/CookList";
+import WaiterList from "../components/AdminView/WaiterList/WaiterList";
+import CookList from '../components/AdminView/CookList/CookList';
 import { Grid } from "@mui/material";
 import { sendPostRequest } from "../api/apiUtils";
 

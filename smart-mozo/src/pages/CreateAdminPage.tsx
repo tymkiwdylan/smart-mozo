@@ -1,5 +1,5 @@
 import { Box } from "@mui/material"
-import CreateAdmin from "../components/CreateAdmin/CreateAdmin"
+import CreateAdmin from "../components/AdminView/CreateAdmin/CreateAdmin"
 import { useNavigate } from "react-router-dom";
 import { useAppSelector } from "../store/hooks";
 import { RootState } from "../store/store";

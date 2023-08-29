@@ -7,7 +7,11 @@ import CreateRestaurantPage from "./pages/CreateRestaurantPage";
 import CreateAdminPage from "./pages/CreateAdminPage";
 import CreateMenuPage from "./pages/CreateMenuPage";
 import AdminPanel from "./pages/AdminPanel";
-
+import Home from './pages/UserHome';
+import OrderView from "./components/AdminView/WaiterView/OrdersView";
+import { useEffect } from "react";
+import { useAppDispatch } from "./store/hooks";
+import { socketActions } from "./store/socketSlice";
 const useStyles = makeStyles({
   app: {
     width: '100vw',
@@ -19,6 +23,13 @@ const useStyles = makeStyles({
 
 function App() {
   const classes = useStyles();
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    console.log('App mounted');
+    dispatch(socketActions.startConnecting());
+  }, []);
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline>
@@ -30,6 +41,8 @@ function App() {
               <Route path='/crear-admin/' element={<CreateAdminPage/>}/>
               <Route path="/crear-menu/" element={<CreateMenuPage/>}/>
               <Route path="/admin/" element={<AdminPanel/>}/>
+              <Route path='/home/:restaurant_id/:table_id' element={<Home/>}/>
+              <Route path='/waiter/' element={<OrderView/>}/>
             </Routes>
           </Router>
         </div>

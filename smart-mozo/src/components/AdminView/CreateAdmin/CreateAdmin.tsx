@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { TextField, Button, Grid, Paper, Typography} from '@mui/material';
 import { makeStyles } from '@mui/styles';
-import { sendPostRequest } from '../../api/apiUtils';
+import { sendPostRequest } from '../../../api/apiUtils';
 import { useNavigate } from 'react-router-dom';
 
 const useStyles = makeStyles(() => ({

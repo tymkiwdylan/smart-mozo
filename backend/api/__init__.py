@@ -5,12 +5,13 @@ from os import path
 import os
 from dotenv import load_dotenv
 from flask_cors import CORS
+from flask_socketio import SocketIO
 load_dotenv()
 
 
 db = SQLAlchemy()
 DB_NAME = "database.db"
-
+socket_io = SocketIO()
 def create_test_app():
 
     app = Flask(__name__)
@@ -37,6 +38,8 @@ def create_app():
     app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{DB_NAME}'
     db.init_app(app)
     
+    socket_io.init_app(app, cors_allowed_origins="*")
+
     from .models import SuperAdmin, Client, Admin, Restaurant, Menu, Transaction, Waiter, Cook, Table
     create_database(app)
 
@@ -54,7 +57,7 @@ def create_app():
     app.register_blueprint(auth, url_prefix='/api/auth/')
 
 
-    return app
+    return app, socket_io
 
 def create_database(app):
     if not (os.path.exists('/instance/database.db')):

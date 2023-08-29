@@ -1,5 +1,5 @@
 import { Box } from "@mui/material";
-import CreateMenu from "../components/CreateMenu/CreateMenu";
+import CreateMenu from "../components/AdminView/CreateMenu/CreateMenu";
 import { useNavigate } from "react-router-dom";
 import { RootState } from "../store/store";
 import { useAppSelector } from "../store/hooks";

@@ -45,11 +45,11 @@ class Admin(db.Model):
         return data
     
 
-class Restaurant(db.Model):
+class Restaurant(db.Model): #Todo: Add menu Categories and add a category column to the menu
     id = db.Column(db.Integer, primary_key=True)
     restaurant_name = db.Column(db.String(100))
     menu = db.relationship('Menu')
-    transactions = db.relationship('Transaction') #TODO: Think about changing this to be Orders instead of transactions
+    transactions = db.relationship('Transaction')
     waiters = db.relationship('Waiter')
     cooks  = db.relationship('Cook')
     tables = db.relationship('Table')

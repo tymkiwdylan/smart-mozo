@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { List, ListItem, ListItemText, ListItemSecondaryAction, IconButton, Card, CardContent, Box, Button } from '@mui/material';
 import { Edit, Delete, Add } from '@mui/icons-material';
 import EditWaiter from './EditWaiter';
-import { sendPostRequest } from '../../api/apiUtils';
+import { sendPostRequest } from '../../../api/apiUtils';
 
 
 interface Props {

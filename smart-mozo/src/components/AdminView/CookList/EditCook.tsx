@@ -6,7 +6,7 @@ import {
   TextField,
   Button,
 } from "@mui/material";
-import { useAppSelector } from "../../store/hooks";
+import { useAppSelector } from "../../../store/hooks";
 
 interface PlateFormProps {
   open: boolean;
