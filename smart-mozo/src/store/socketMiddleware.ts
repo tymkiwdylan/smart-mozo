@@ -2,13 +2,6 @@
 import { Middleware } from 'redux';
 import { Socket, io } from 'socket.io-client';
 import { socketActions } from './socketSlice';
-import { RootState } from './store';
-import { createAsyncThunk } from '@reduxjs/toolkit';
-
-const sendSocketMessage = (message: string) => ({
-  type: 'socket/SEND_MESSAGE',
-  payload: message,
-});
 
 
 const socketMiddleware: Middleware = store => {
@@ -25,13 +18,21 @@ const socketMiddleware: Middleware = store => {
         store.dispatch(socketActions.connectionEstablished());
     });
 
-    socket.on('send-all-orders', (data: any) => {
-        store.dispatch(socketActions.receiveAllOrders(data));
-    });
+    // socket.on('send-all-orders', (data: any) => {
+    //     store.dispatch(socketActions.receiveAllOrders(data));
+    // });
 
     socket.on('order', (data: any) => {
+        console.log('We are updating the order');
         store.dispatch(socketActions.receiveNewOrder(data));
     });
+
+    socket.on('prepared-order', (data: any) => {
+        console.log('We are sending the order to the waiter');
+        store.dispatch(socketActions.passOrdertoWaiter(data));
+        // store.dispatch(socketActions.deleteKitchenOrder(0)); //This is wrong but let's see
+    });
+
     }
 
     if(socketActions.joinRoom.match(action) && isConnectionEstablished) {
@@ -39,9 +40,18 @@ const socketMiddleware: Middleware = store => {
     }
 
     if (socketActions.sendOrder.match(action) && isConnectionEstablished) {
-      console.log(action.payload);
       socket.emit('order', action.payload);
     }
+
+    if (socketActions.passOrder.match(action) && isConnectionEstablished) {
+      socket.emit('prepared-order', action.payload);
+    }
+
+    
+    // if (socketActions.preparedOrder.match(action) && isConnectionEstablished) {
+    //   socket.emit('prepared-order', action.payload.order);
+    // }
+    
     next(action);
   };
 };

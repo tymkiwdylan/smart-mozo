@@ -9,11 +9,13 @@ interface Props {
 }
 
 const OrderCard: React.FC<Props> = ({ order, onOrderCompleted }) => {
+
+
   return (
-    <Card style={{ marginBottom: '10px', borderRadius: '8px' }}>
+    <Card style={{borderRadius: '8px', width: 350, background: 'green'}}>
       <CardContent>
-        <Typography variant="h6">{order.name}</Typography>
-        <Typography color="textSecondary">Table: {order.table_id}</Typography>
+        <Typography variant="h6">Mesa: {order.table_id}</Typography>
+        <Typography color="textSecondary">Nombre: {order.name}</Typography>
         <Typography variant="body1">Items:</Typography>
         <ul>
           {order.items.map((item) => (

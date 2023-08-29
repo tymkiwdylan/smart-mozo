@@ -166,6 +166,7 @@ class Transaction(db.Model):
             'waiter': self.waiter
         }
         return data
+    
 
 class Waiter(db.Model):
     id = db.Column(db.Integer, primary_key=True)

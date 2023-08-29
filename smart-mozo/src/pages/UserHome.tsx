@@ -9,7 +9,6 @@ import InputModal from '../components/UserView/Input/InputModal';
 import OrderMenu from '../components/UserView/OrderMenu/OrderMenu';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { setOrderName } from '../store/nameSlice';
-import io from 'socket.io-client';
 import OrderConfirm from '../components/UserView/OrderConfirm/OrderConfirm';
 import { socketActions } from '../store/socketSlice';
 
@@ -66,16 +65,17 @@ const HomePage: React.FC = () => {
     const handleConfirmClose = () => {
         setOpenConfirm(false);
     };
-
+    let counter = 0;
     const handleConfirm = () => {
         // Send the order to the backend
+        counter += 1;
         dispatch(socketActions.sendOrder({restaurant_id: parseFloat(restaurant_id as string),
                                           table_id: parseFloat(table_id as string),
                                           items: orderList,
                                           notes: notes,
                                           name: name,
                                           status: 'pending',
-                                          id: socket.orders.length}));
+                                          id: counter}));
         
         // Reset the order list
         setOrderList([]);
@@ -107,7 +107,7 @@ const HomePage: React.FC = () => {
             </Container>
 
             <BottomNavigation value='Confirmar Pedido' className='navBar'>
-                <Button variant="outlined" fullWidth color="secondary" className='button' onClick={() => 
+                <Button variant="outlined" fullWidth color="secondary" className='button' style={{color: 'green'}} onClick={() => 
                     orderList.length === 0 ? alert('No hay items en el pedido') : setOpenConfirm(true)
                     } > Confirmar Pedido </Button>
             </BottomNavigation>

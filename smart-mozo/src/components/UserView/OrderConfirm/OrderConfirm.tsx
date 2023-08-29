@@ -31,7 +31,7 @@ const OrderConfirm: React.FC<Props> = ({
   open,
   onDeleteItem,
   onSubmit,
-  setNote,
+  // setNote,
   onClose
 }) => {
   return (

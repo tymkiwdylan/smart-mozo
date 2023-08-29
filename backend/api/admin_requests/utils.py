@@ -1,9 +1,8 @@
 import os
-from urllib import request
 from urllib.parse import urljoin
 from api.models import Admin
 
-def save_file(file):
+def save_file(file, url_root):
     
     filename = file.filename
     data = file.read()
@@ -12,7 +11,7 @@ def save_file(file):
     with open(path, 'wb') as f:
         f.write(data)
 
-    url = urljoin(request.url_root, 'static/restaurantImages/' + filename)
+    url = urljoin(url_root, 'static/restaurantImages/' + filename)
 
     return url
     

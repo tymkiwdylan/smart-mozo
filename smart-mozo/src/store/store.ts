@@ -1,13 +1,12 @@
 // store.ts
 
-import { Middleware, MiddlewareArray, applyMiddleware, configureStore} from '@reduxjs/toolkit';
+import {  MiddlewareArray, configureStore} from '@reduxjs/toolkit';
 import { persistReducer, persistStore } from 'redux-persist';
 import thunk from 'redux-thunk';
 import restaurantReducer from './restaurantSlice';
 import storage from 'redux-persist/lib/storage';
 import nameSlice from './nameSlice';
 import socketSlice from './socketSlice';
-import { useAppDispatch } from './hooks';
 import {socketMiddleware } from './socketMiddleware';
 
 

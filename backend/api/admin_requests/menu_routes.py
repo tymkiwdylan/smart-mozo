@@ -63,7 +63,7 @@ def edit_menu_item():
     # Check if a file was included in the request
     if 'file' in request.files:
         file = request.files['file']
-        img = save_file(file)
+        img = save_file(file, request.url_root)
     
     if not plate:
         plate = Menu(plate=plate_name, description=description,

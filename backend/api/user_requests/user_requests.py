@@ -24,11 +24,24 @@ def on_join(data):
         username = data['restaurant_name']
     else:
         username = data['name']
+        
+    role = data['role']
     room = data['restaurant_id']
+    room = str(room) + role
     join_room(room)
-    print(username + ' has entered the room.')
+    print(request.sid + ' has entered the room ' + room)
     
 @socket_io.on('order')
 def on_order(data):
-    emit('order', data, room=data['restaurant_id'])
+    room = str(data['restaurant_id']) + 'cook'
+    emit('order', data, room=room)
     print('order sent: ', data)
+    
+@socket_io.on('prepared-order')
+def on_order_prepared(data):
+    room = str(data['restaurant_id']) + 'waiter'
+    emit('prepared-order', data, room=room)
+    print('order prepared: ', data)
+    
+    
+    

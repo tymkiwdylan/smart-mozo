@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../store/hooks';
 import { Box, Grid } from '@mui/material';
-import OrderCard from './OrderCard';
+import OrderCard from '../WaiterView/OrderCard';
 import { socketActions } from '../../../store/socketSlice';
 // import { useDrop, DropTargetMonitor } from 'react-dnd';
 
@@ -15,21 +15,19 @@ const OrderView: React.FC = () => {
     const restaurant_name = useAppSelector((state) => state.restaurant.restaurant.restaurant_name);
 
     useEffect(() => {
-        dispatch(socketActions.joinRoom({restaurant_id, restaurant_name, role: 'waiter'}));
+        dispatch(socketActions.joinRoom({restaurant_id, restaurant_name, role: 'cook'}));
     }, []);
 
     useEffect(() => {
-        console.log('Orders updated');
-        setOrders(socket.waitersOrders);
-    }, [socket.waitersOrders]);
+        setOrders(socket.kitchenOrders);
+    }, [socket.kitchenOrders]);
     
-    const handleOrderCompleted = (index: number) => {
-        dispatch(socketActions.deleteWaiterOrder(index));
+    const handleOrderCompleted = (index: number, order: Order) => {
+        dispatch(socketActions.passOrder(order));
+        dispatch(socketActions.deleteKitchenOrder(index));
     }
 
     const [orders, setOrders] = useState<Order[]>([]);
-
-    console.log(orders);
 
   return (
     <Box
@@ -45,7 +43,7 @@ const OrderView: React.FC = () => {
     <Grid container spacing={0} style={{marginTop: '10px'}}>
       {orders.map((order, index) => (
         <Grid item xs={12} sm={6} md={6} lg={3} key={index} style={{marginBottom: '10px'}}>
-        <OrderCard order={order} onOrderCompleted={() => handleOrderCompleted(index)} />
+        <OrderCard order={order} onOrderCompleted={() => handleOrderCompleted(index, order)} />
         </Grid>
       ))}
     </Grid>
