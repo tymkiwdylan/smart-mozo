@@ -1,0 +1,17 @@
+.table-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr); /* 5 tables per row */
+    gap: 10px; /* Gap between table squares */
+  }
+  
+  .table {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100px; /* Adjust based on your design */
+    height: 100px; /* Same as width for a square */
+    background-color: lightblue; /* Set your desired background color */
+    border: 1px solid gray;
+    font-size: 1.5rem;
+  }
+  

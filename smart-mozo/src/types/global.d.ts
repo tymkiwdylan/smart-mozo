@@ -28,6 +28,7 @@ declare global {
     restaurant_id: number;
     name: string;
     email: string;
+    tables: Table[];
   }
 
   interface Cook {
@@ -38,6 +39,7 @@ declare global {
 
   interface Table {
     id: number;
+    number: number;
     restaurant_id: number;
   }
 

@@ -95,7 +95,7 @@ def create_menu():
     # if (not isValidToken(token)):
     #     return {'message': 'NOT AUTHORIZED'}, 401
     
-    file = request.files['file']
+    file = request.files['file'] #TODO: FIX THE BUG
     restaurant_id = request.form['restaurant_id']
     
     if file and file.filename.endswith('.xlsx'):

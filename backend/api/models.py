@@ -176,6 +176,7 @@ class Waiter(db.Model):
     password = db.Column(db.String(50))
     transactions = db.relationship('Transaction')
     account_id = db.Column(db.String(30))
+    tables = db.relationship('Table')
     
     def get_transactions(self):
         transactions = []
@@ -185,6 +186,14 @@ class Waiter(db.Model):
             
         return transactions
     
+    def get_tables(self):
+        tables = []
+        
+        for table in self.tables:
+            tables.append(table.number);
+            
+        return tables
+    
     def serialize(self):
         data = {
             'id': self.id,
@@ -192,6 +201,7 @@ class Waiter(db.Model):
             'email': self.email,
             'name': self.name,
             'transactions': self.get_transactions(),
+            'tables': self.get_tables(),
         }
         return data
     
@@ -210,7 +220,9 @@ class Cook(db.Model):
 
 class Table(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    number = db.Column(db.Integer)
     restaurant_id = db.Column(db.Integer, db.ForeignKey('restaurant.id'))
+    waiter_id = db.Column(db.Integer, db.ForeignKey('waiter.id'))
     
     def serialize(self):
         data = {
@@ -220,15 +232,3 @@ class Table(db.Model):
         return data
     
     
-    
-_all__ = [
-    "SuperAdmin",
-    "Client",
-    "Admin",
-    "Restaurant",
-    "Menu",
-    "Transaction",
-    "Waiter",
-    "Cook",
-    "Table",
-]

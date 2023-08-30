@@ -39,8 +39,58 @@ def add_table():
     
     return {'message': 'success'}, 201
 
+@restaurant_routes.route('/assing-tables', methods=['POST'])
+def assign_tables():
+    """
+    Assign a table to a waiter.
 
-@restaurant_routes.route('/get-restaurant/<restaurant_id>', methods=['GET'])
+    Returns:
+        dict: JSON response with success message.
+    """
+    # token = request.headers['Authorization']
+
+    # if (not isValidToken(token)):
+    #     return {'message': 'NOT AUTHORIZED'}, 401
+    
+    data = request.get_json(force=True)
+    
+    waiter_id = data['waiter_id']
+    tables = data['tables']
+    
+    for table in tables:
+        table = Table.query.get(int(table.id))
+        table.waiter_id = int(waiter_id)
+    
+    db.session.commit()
+    
+    return {'message': 'success'}, 201
+
+@restaurant_routes.route('delete-table', methods=['POST'])
+def delete_table():
+    """
+    Delete a table.
+
+    Returns:
+        dict: JSON response with success message.
+    """
+    # token = request.headers['Authorization']
+
+    # if (not isValidToken(token)):
+    #     return {'message': 'NOT AUTHORIZED'}, 401
+    
+    data = request.get_json(force=True)
+    
+    table_id = data['table_id']
+    
+    table = Table.query.get(int(table_id))
+    db.session.delete(table)
+    
+    db.session.commit()
+    
+    return {'message': 'success'}, 201
+
+
+@restaurant_routes.route('/get-restaurant/<restaurant_id>', methods=['GET']) #Maybe change this to menu (id is given by frontend anyways)
 def get_restaurant(restaurant_id):
     """
     Get restaurant details.

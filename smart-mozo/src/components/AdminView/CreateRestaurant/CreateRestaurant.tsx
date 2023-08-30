@@ -43,7 +43,7 @@ const CreateRestaurant: React.FC = () => {
     };
 
     try {
-        const response: any = await sendPostRequest(formData, 'create-restaurant');     
+        const response: any = await sendPostRequest(formData, 'auth/create-restaurant');     
         const restaurant_id = response['data']['id'];
 
         await dispatch(fetchRestaurantData(restaurant_id));
