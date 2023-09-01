@@ -1,11 +1,13 @@
 from flask import Blueprint, request
 from api.models import Waiter
 from api import db
-
+from api.admin_requests.utils import isValidToken
+from flask_jwt_extended import jwt_required
 
 waiter_routes = Blueprint('waiter_routes', __name__)
 
 @waiter_routes.route('/delete-waiter', methods=['POST'])
+@jwt_required()
 def delete_waiter():
     """
     Delete a waite.
@@ -31,6 +33,7 @@ def delete_waiter():
     return {'message': 'success', 'data': {'id': id}}, 201
 
 @waiter_routes.route('/add-waiter', methods=['POST'])
+@jwt_required()
 def add_waiter():
     """
     Adds or edits a waiter.
@@ -38,7 +41,7 @@ def add_waiter():
     Returns:
         dict: JSON response with success message and data.
     """
-     # token = request.headers['Authorization']
+    # token = request.headers['Authorization']
 
     # if (not isValidToken(token)):
     #     return {'message': 'NOT AUTHORIZED'}, 401

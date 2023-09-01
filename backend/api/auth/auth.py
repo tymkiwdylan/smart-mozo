@@ -4,6 +4,7 @@ from api.models import Admin, Restaurant
 from flask_login import login_required, current_user, login_user, logout_user
 from werkzeug.security import generate_password_hash, check_password_hash
 import secrets
+from flask_jwt_extended import create_access_token
 
 auth = Blueprint('auth', __name__)
 
@@ -68,29 +69,19 @@ def login():
        @params: (username, password)
     '''
     
-    headers = request.headers['Authorization']
-	
-    if (not headers) or (len(headers) == 0):
-        data = request.get_json(force = True)
-        username = data['username']
-        password = data['password']
-        user = Admin.query.filter_by(username=username).first()
-        print(user)
-        if user:
-            
-            if check_password_hash(user.password, password):
-                result = user.serialize()
-                
-            else:
-                return {"message": "password is incorrect"}, 400
+    data = request.get_json(force = True)
+    username = data['username']
+    password = data['password']
+    user = Admin.query.filter_by(username=username).first()
+    access_token = None
+    if user:
+        if check_password_hash(user.password, password):
+            access_token = create_access_token(identity=user.id)
+            result = user.serialize()
         else:
-            return {"message": "user does not exist"}, 400
-
+            return {"message": "password is incorrect"}, 400
     else:
-        user = Admin.query.filter_by(api_key=headers).first()
-        if user:
-            result = Admin.serialize(user)
-        else:
-            return {"message": "Must sign in again"}, 400
+        return {"message": "user does not exist"}, 400
 
-    return {"status": 'success', 'data': result}, 201
+
+    return {"status": 'success', 'data': result, 'access_token': access_token}, 201

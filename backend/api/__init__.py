@@ -1,4 +1,5 @@
 
+from datetime import timedelta
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from os import path
@@ -6,6 +7,7 @@ import os
 from dotenv import load_dotenv
 from flask_cors import CORS
 from flask_socketio import SocketIO
+from flask_jwt_extended import JWTManager
 load_dotenv()
 
 
@@ -36,6 +38,11 @@ def create_app():
     CORS(app)
     app.config['SECRET_KEY'] = 'secret'
     app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{DB_NAME}'
+    # Configure JWT settings
+    app.config['JWT_SECRET_KEY'] = 'your-secret-key'  # Change this to a secure key
+    app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(hours=48)  # Set token expiration
+    jwt = JWTManager(app)
+    
     db.init_app(app)
     
     socket_io.init_app(app, cors_allowed_origins="*")
@@ -64,3 +71,4 @@ def create_database(app):
         with app.app_context():
             db.create_all()
         print('Created Database!')
+        

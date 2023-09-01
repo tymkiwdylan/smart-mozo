@@ -1,10 +1,13 @@
 from flask import Blueprint, request
 from api.models import Cook
 from api import db
+from api.admin_requests.utils import isValidToken
+from flask_jwt_extended import jwt_required
 
 cook_routes = Blueprint('cook_routes', __name__)
 
 @cook_routes.route('/delete-cook', methods=['POST'])
+@jwt_required()
 def delete_cook():
     """
     Delete a cook.
@@ -31,6 +34,7 @@ def delete_cook():
     
 
 @cook_routes.route('/add-cook', methods=['POST'])
+@jwt_required()
 def add_cook():
     """
     Add a cook.

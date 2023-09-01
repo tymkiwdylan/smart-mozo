@@ -17,8 +17,7 @@ const AdminPanel = () => {
         if (restaurantData.id != 0){
         dispatch(fetchRestaurantData(restaurantData.id));
         }
-    }      
-    , [dispatch, restaurantData.id]);
+    }, [dispatch, restaurantData.id]);
 
     useEffect(() => {
         setMenu(restaurantData.menu);

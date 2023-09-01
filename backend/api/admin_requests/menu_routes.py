@@ -4,7 +4,7 @@ from api import db
 from .utils import save_file, isValidToken
 import pandas as pd
 import io
-
+from flask_jwt_extended import jwt_required
 
 menu_routes = Blueprint('menu_routes', __name__)
 
@@ -37,6 +37,7 @@ def update_menu(items, restaurant_id):
     
 
 @menu_routes.route('/edit-menu-item', methods=['POST'])
+@jwt_required()
 def edit_menu_item():
     """
     Edit or create a menu item.
@@ -82,6 +83,7 @@ def edit_menu_item():
     
 
 @menu_routes.route('/create-menu', methods=['POST'])
+@jwt_required()
 def create_menu():
     """
     Create or update menu items from an Excel or CSV file.
@@ -116,6 +118,7 @@ def create_menu():
     return {'message': 'success'}, 201
     
 @menu_routes.route('/delete-menu-item', methods=['POST'])
+@jwt_required()
 def delete_menu_item():
     """
     Delete a menu item.

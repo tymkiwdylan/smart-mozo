@@ -13,6 +13,7 @@ import { useEffect } from "react";
 import { useAppDispatch } from "./store/hooks";
 import { socketActions } from "./store/socketSlice";
 import CookView from "./components/AdminView/CookView/CookView";
+import LoginPage from "./pages/Login";
 const useStyles = makeStyles({
   app: {
     width: '100vw',
@@ -45,6 +46,7 @@ function App() {
               <Route path='/home/:restaurant_id/:table_id' element={<Home/>}/>
               <Route path='/waiter/' element={<OrderView/>}/>
               <Route path='/cook/' element={<CookView/>}/>
+              <Route path ='/admin/login' element={<LoginPage/>}/>
             </Routes>
           </Router>
         </div>
