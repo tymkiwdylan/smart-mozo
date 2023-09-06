@@ -25,7 +25,6 @@ export const store = configureStore({
     socket: persistReducer(persistConfig ,socketSlice.reducer),
   },
   middleware: new MiddlewareArray().concat(thunk, socketMiddleware),
-  // Add socket middleware
 });
 
 

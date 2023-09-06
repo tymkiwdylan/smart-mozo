@@ -190,7 +190,7 @@ class Waiter(db.Model):
         tables = []
         
         for table in self.tables:
-            tables.append(table.number);
+            tables.append(table.serialize());
             
         return tables
     
@@ -227,6 +227,7 @@ class Table(db.Model):
     def serialize(self):
         data = {
             'id': self.id,
+            'number': self.number,
             'restaurant_id': self.restaurant_id,
         }
         return data

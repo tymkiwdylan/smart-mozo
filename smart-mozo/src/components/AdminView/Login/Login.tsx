@@ -6,6 +6,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch } from '../../../store/hooks';
 import { fetchRestaurantData } from '../../../store/restaurantActions';
+import { setToken } from '../../../store/restaurantSlice';
 
 const Login: React.FC = () => {
   const [username, setUsername] = useState('');
@@ -13,7 +14,7 @@ const Login: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
-  const handleLogin = () => {
+  const handleLogin =  () => {
     // You can implement your login logic here
     axios.post('http://127.0.0.1:5000/api/auth/login', {
         username,
@@ -22,16 +23,17 @@ const Login: React.FC = () => {
       .then((response) => {
         console.log(response);
         
-          localStorage.setItem('token', response.data.access_token);
-          console.log(response.data.access_token);
-          dispatch(fetchRestaurantData(response.data.data.restaurant_id))
-          navigate('/admin');
+          dispatch(setToken(response.data.access_token));
+          dispatch(fetchRestaurantData(response.data.data.restaurant_id));
         // } else {
         //   alert('Invalid username or password');
         // }
+      }).then(() => {
+        navigate('/admin');
       })
       .catch((error) => {
         console.log(error);
+        return;
       });
   };
 

@@ -75,7 +75,7 @@ const ItemList: React.FC<Props> = ({ items, onDeleteItem, onEditItem, onAddItem 
                   primary={item.name}
                   secondary={`email: ${item.email}`}
                 />
-                <ListItemText primary={'Mesas: 1, 7, 12'} />
+                <ListItemText primary={`tables ${item.tables.map(table => table.number)}`} />
               </CardContent>
               <ListItemSecondaryAction>
                 <IconButton edge="end" aria-label="edit" onClick={() => handleEditItem(item)}>

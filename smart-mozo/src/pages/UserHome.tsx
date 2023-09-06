@@ -16,7 +16,6 @@ const HomePage: React.FC = () => {
 
     const { restaurant_id } = useParams<{ restaurant_id: string}>();
     const { table_id } = useParams<{ table_id: string}>();
-    const socket = useAppSelector((state) => state.socket);
 
     const orderName = useAppSelector((state) => state.orderName.name);
     const dispatch = useAppDispatch();

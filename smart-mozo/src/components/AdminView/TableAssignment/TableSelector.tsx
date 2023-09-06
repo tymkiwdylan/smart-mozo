@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import "./styles.css";
 import { ButtonBase, Grid, Modal, Button } from "@mui/material";
-import { useAppSelector } from "../../../store/hooks";
+import { useAppDispatch, useAppSelector } from "../../../store/hooks";
 import { sendPostRequest } from "../../../api/apiUtils";
+import { setWaiterTables } from "../../../store/restaurantSlice";
 
 interface TableGridProps {
   selectedWaiter: Waiter;
@@ -15,33 +16,43 @@ const TableSelector: React.FC<TableGridProps> = ({
 }) => {
   const restaurantTables = useAppSelector((state) => state.restaurant.restaurant.tables);
   const [selectedTables, setSelectedTables] = useState<Table[]>(selectedWaiter.tables);
-  const [tables, setTables] = useState(restaurantTables);
+  const [tables, setTable] = useState(restaurantTables);
+
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
-    setTables(restaurantTables);
+    setTable(restaurantTables);
   }, [restaurantTables]);
-
-
+  console.log(selectedTables);
+  
   const handleTableClick = (tableNumber: Table) => {
     setSelectedTables((prevSelectedTables) => {
-      if (prevSelectedTables.includes(tableNumber)) {
-        return prevSelectedTables.filter((table) => table !== tableNumber);
+      if (prevSelectedTables.some((table) => table.id === tableNumber.id)) {
+        // If the table is already selected, remove it from the list
+        return prevSelectedTables.filter((table) => table.id !== tableNumber.id);
       } else {
+        // If the table is not selected, add it to the list
         return [...prevSelectedTables, tableNumber];
       }
     });
   };
 
-  const handleConfirm = () => {
+  const isTableSelected = (tableId: number) => {
+    return selectedTables.some((table) => table.id === tableId);
+  };
+
+  const handleConfirm = async () => {
     // Perform actions with selected waiter and tables here
     try {
-        sendPostRequest({waiter_id: selectedWaiter.id, tables: selectedTables}, 'restaurant/assign-tables');
+        const response = await sendPostRequest({waiter_id: selectedWaiter.id, tables: selectedTables}, 'restaurant/assign-tables');
+        dispatch(setWaiterTables({waiterId: selectedWaiter.id, tables: response.data.tables}));
     }
     catch (error) {
         console.error('Error sending data:', error);
     }
     onCloseModal();
   };
+  
 
   return (
     <Modal open={true} onClose={onCloseModal}>
@@ -54,8 +65,9 @@ const TableSelector: React.FC<TableGridProps> = ({
                 <ButtonBase
                   onClick={() => handleTableClick(table)}
                   className={`table ${
-                    selectedTables.includes(table) ? "selected" : ""
+                    isTableSelected(table.id) ? "selected" : ""
                   }`}
+                  
                 >
                   {table.number}
                 </ButtonBase>

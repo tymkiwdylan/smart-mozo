@@ -3,6 +3,9 @@ import { AppBar, Toolbar, Typography, Container, Menu, MenuItem, ButtonBase, Ico
 import SettingsIcon from '@mui/icons-material/Settings';
 import Option  from './Option';
 import './PageContainer.css';
+import { useAppDispatch } from '../../store/hooks';
+import { setRestaurant, setToken } from '../../store/restaurantSlice';
+import { useNavigate } from 'react-router-dom';
 
 interface PageContainerProps {
   title: string;
@@ -12,7 +15,9 @@ interface PageContainerProps {
 const PageContainer: React.FC<PageContainerProps> = ({ title, children }) => {
   // Set the static image you want to use for the button
 
-  const dropdownOptions = [<Option text='logout' path='#'/>, <Option text='staff' path='#'/>];
+  const dropdownOptions = [<Option text='staff' path='/admin/staff/'/>];
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
@@ -23,6 +28,22 @@ const PageContainer: React.FC<PageContainerProps> = ({ title, children }) => {
   const handleCloseMenu = () => {
     setAnchorEl(null);
     };
+
+  const handleLogout = () => {
+    const emptyRestaurant = {
+      id: 0,
+      name: '',
+      restaurant_name: '',
+      address: '',
+      menu: [],
+      waiters: [],
+      cooks: [],
+      tables: [],
+    };
+    navigate('/admin/login');
+    dispatch(setToken(''));
+    dispatch(setRestaurant(emptyRestaurant));
+  };
 
 
   return (
@@ -56,6 +77,7 @@ const PageContainer: React.FC<PageContainerProps> = ({ title, children }) => {
                 {option}
               </MenuItem>
             ))}
+            <MenuItem onClick={handleLogout}>Logout</MenuItem>
           </Menu>
         </Toolbar>
       </AppBar>

@@ -2,11 +2,11 @@ import { useEffect, useState } from "react";
 import AdminMenu from "../components/AdminView/AdminMenu/AdminMenu";
 import PageContainer from "../components/PageContainer/PageContainer";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
-import { fetchRestaurantData } from "../store/restaurantActions";
-import WaiterList from "../components/AdminView/WaiterList/WaiterList";
-import CookList from '../components/AdminView/CookList/CookList';
+import { fetchRestaurantData, setMenuItems} from "../store/restaurantActions";
 import { Grid } from "@mui/material";
 import { sendPostRequest } from "../api/apiUtils";
+import WaiterGrid from "../components/AdminView/TableAssignment/WaiterGrid";
+import TableGrid from "../components/AdminView/Tables/Tables";
 
 const AdminPanel = () => {
 
@@ -14,20 +14,20 @@ const AdminPanel = () => {
     const restaurantData = useAppSelector(state => state.restaurant.restaurant);
 
     useEffect(() => {
-        if (restaurantData.id != 0){
+        if (restaurantData){
         dispatch(fetchRestaurantData(restaurantData.id));
         }
-    }, [dispatch, restaurantData.id]);
+    }, [dispatch]);
 
     useEffect(() => {
         setMenu(restaurantData.menu);
         setWaiters(restaurantData.waiters);
-        setCooks(restaurantData.cooks);
-    }, [restaurantData.menu, restaurantData.waiters, restaurantData.cooks]);
+        setTables(restaurantData.tables);
+    }, [restaurantData]);
 
     const [menu, setMenu] = useState<MenuItem[]>(restaurantData.menu);
     const [waiters, setWaiters] = useState<Waiter[]>(restaurantData.waiters);
-    const [cooks, setCooks] = useState<Cook[]>(restaurantData.cooks);
+    const [tables, setTables] = useState<Table[]>(restaurantData.tables);
 
     const handleDeleteMenu = (menuItem: MenuItem) => {
         //Delete item from backend
@@ -36,35 +36,7 @@ const AdminPanel = () => {
             sendPostRequest(menuItem, 'menu/delete-menu-item');
             const updatedItems = menu.filter(item => item.id !== menuItem.id);
             setMenu(updatedItems);
-        }
-        catch (error) {
-            console.log(error);
-        }
-    }
-
-    const handleDeleteWaiter = (waiter: Waiter) => {
-        //Delete item from backend
-        console.log('Deleting item: ', waiter);
-
-        try {
-            sendPostRequest(waiter, 'waiter/delete-waiter');
-            const updatedItems = waiters.filter(item => item.id !== waiter.id);
-            setWaiters(updatedItems);
-        }
-        catch (error) {
-            console.log(error);
-        }
-
-    }
-
-    const handleDeleteCook = (cook: Cook) => {
-        //Delete item from backend
-        console.log('Deleting item: ', cook);
-
-        try {
-            sendPostRequest(cook, 'cook/delete-cook');
-            const updatedItems = cooks.filter(item => item.id !== cook.id);
-            setCooks(updatedItems);
+            dispatch(setMenuItems(updatedItems));
         }
         catch (error) {
             console.log(error);
@@ -76,49 +48,27 @@ const AdminPanel = () => {
             item.id === updatedItem.id ? updatedItem : item
           );
           setMenu(updatedItems);
+          dispatch(setMenuItems(updatedItems));
     }
-
-    const handleEditWaiter = (updatedItem: Waiter) => {
-        const updatedItems = waiters.map(item =>
-            item.id === updatedItem.id ? updatedItem : item
-            );
-            setWaiters(updatedItems);
-         }
-    
-    const handleEditCook = (updatedItem: Cook) => {
-        const updatedItems = cooks.map(item =>
-            item.id === updatedItem.id ? updatedItem : item
-            );
-            setCooks(updatedItems);
-         }
 
     const handleNewMenuItem = (newItem: MenuItem) => {
         const updatedItems = [...menu, newItem];
         setMenu(updatedItems);
+        dispatch(setMenuItems(updatedItems));
     }
 
-    const handleNewWaiter = (newItem: Waiter) => {
-        console.log('Adding new waiter: ', newItem);
-        const updatedItems = [...waiters, newItem];
-        setWaiters(updatedItems);
-    }
-
-    const handleNewCook = (newItem: Cook) => {
-        const updatedItems = [...cooks, newItem];
-        setCooks(updatedItems);
-    }
 
     return(
         <PageContainer title='Panel Administrativo'>
-            <Grid container spacing={12}>
+            <Grid container spacing={12} sx={{marginLeft: '-10rem'}}>
+                <Grid item xs={4}>
+                    <WaiterGrid waiters={waiters}/>
+                </Grid>
                 <Grid item xs={4}>
                     <AdminMenu items={menu} onEditItem={handleEditMenu} onDeleteItem={handleDeleteMenu} onAddItem={handleNewMenuItem}/>
                 </Grid>
                 <Grid item xs={4}>
-                    <WaiterList items={waiters} onEditItem={handleEditWaiter} onDeleteItem={handleDeleteWaiter} onAddItem={handleNewWaiter}/>
-                </Grid>
-                <Grid item xs={4}>
-                    <CookList items={cooks} onEditItem={handleEditCook} onDeleteItem={handleDeleteCook} onAddItem={handleNewCook}/>
+                    <TableGrid tables={tables}/>
                 </Grid>
             </Grid>
         </PageContainer>

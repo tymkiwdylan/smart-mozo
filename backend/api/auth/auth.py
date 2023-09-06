@@ -4,7 +4,8 @@ from api.models import Admin, Restaurant
 from flask_login import login_required, current_user, login_user, logout_user
 from werkzeug.security import generate_password_hash, check_password_hash
 import secrets
-from flask_jwt_extended import create_access_token
+from flask_jwt_extended import create_access_token, jwt_required
+
 
 auth = Blueprint('auth', __name__)
 
@@ -85,3 +86,8 @@ def login():
 
 
     return {"status": 'success', 'data': result, 'access_token': access_token}, 201
+
+@auth.route('/validate-token', methods=['GET'])
+@jwt_required()
+def validate_token():
+    return {'message': 'success'}, 200

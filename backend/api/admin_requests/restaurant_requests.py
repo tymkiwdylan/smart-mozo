@@ -30,19 +30,18 @@ def add_table():
     
     data = request.get_json(force=True)
     
-    num_tables = data['num_tables']
+    number = data['number']
     restaurant_id = data['restaurant_id']
     
-    for i in range(int(num_tables)):
-        new_table = Table(restaurant_id=restaurant_id)
-        
-        db.seesion.add(new_table)
+    new_table = Table(number=number, restaurant_id=restaurant_id)
+    
+    db.session.add(new_table)
         
     db.session.commit()
     
-    return {'message': 'success'}, 201
+    return {'message': 'success', 'data': new_table.serialize()}, 201
 
-@restaurant_routes.route('/assing-tables', methods=['POST'])
+@restaurant_routes.route('/assign-tables', methods=['POST'])
 @jwt_required()
 def assign_tables():
     """
@@ -61,13 +60,24 @@ def assign_tables():
     waiter_id = data['waiter_id']
     tables = data['tables']
     
+    print(tables)
+    
+    waiter = Waiter.query.get(int(waiter_id))
+    
+    for table in waiter.tables:
+        if table:
+            table.waiter_id = None
+    
     for table in tables:
-        table = Table.query.get(int(table.id))
-        table.waiter_id = int(waiter_id)
+        table = Table.query.get(int(table['id']))
+        if table:
+            table.waiter_id = int(waiter_id)
     
     db.session.commit()
     
-    return {'message': 'success'}, 201
+    waiter = Waiter.query.get(int(waiter_id))
+    
+    return {'message': 'success', 'data': waiter.serialize()}, 201
 
 @restaurant_routes.route('delete-table', methods=['POST'])
 @jwt_required()
@@ -112,6 +122,8 @@ def get_restaurant(restaurant_id):
 
     # if (not isValidToken(token)):
     #     return {'message': 'NOT AUTHORIZED'}, 401
+    
+    print(restaurant_id)
     
     restaurant = Restaurant.query.get(int(restaurant_id))
     

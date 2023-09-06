@@ -1,8 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
 import './styles.css';
-import { ButtonBase, IconButton, Menu, MenuItem} from '@mui/material';
+import { Button, ButtonBase, IconButton, Menu, MenuItem, Modal, TextField } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { sendPostRequest } from '../../../api/apiUtils';
+import { useAppDispatch, useAppSelector } from '../../../store/hooks';
+import {setTables } from '../../../store/restaurantActions';
 
 interface TableGridProps {
   tables: Table[];
@@ -12,6 +14,12 @@ const TableGrid: React.FC<TableGridProps> = ({ tables }) => {
   const [openMenus, setOpenMenus] = useState<{ [key: number]: boolean }>({});
   const [selectedTable, setSelectedTable] = useState<Table | null>(null);
   const menuRefs = useRef<Array<HTMLDivElement | null>>([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [newTableNumber, setNewTableNumber] = useState('');
+  const [tableList, setTable] = useState<Table[]>(tables);
+
+  const restaurant_id = useAppSelector((state) => state.restaurant.restaurant.id);
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     const handleOutsideClick = (event: MouseEvent) => {
@@ -39,40 +47,71 @@ const TableGrid: React.FC<TableGridProps> = ({ tables }) => {
   };
 
   const handleDelete = () => {
-        if (selectedTable) {
-            sendPostRequest({table_id: selectedTable.id}, 'restaurant/delete-table');
-        }
+    if (selectedTable) {
+      sendPostRequest({ table_id: selectedTable.id }, 'restaurant/delete-table');
+      const updatedTables = tableList.filter((table) => table.id !== selectedTable.id)
+      setTable(updatedTables);
+      dispatch(setTables(updatedTables));
     }
+  };
 
+  const handleAddTable = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleModalClose = () => {
+    setIsModalOpen(false);
+    setNewTableNumber('');
+  };
+
+  const handleTableNumberChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setNewTableNumber(event.target.value);
+  };
+
+  const handleAddTableConfirm = async () => {
+    const response = await sendPostRequest({number: newTableNumber, restaurant_id: restaurant_id}, 'restaurant/add-table');
+    setTable([...tableList, response.data]);
+    dispatch(setTables([...tableList, response.data]));
+    handleModalClose();
+  };
 
   return (
     <div className="table-grid">
-      {tables.map((table, index) => (
+      {tableList.map((table, index) => (
         <ButtonBase key={index}>
           <div
             ref={(ref) => (menuRefs.current[index] = ref)}
             className="table"
             onClick={() => {
-                toggleMenu(index);
-                setSelectedTable(table);    
-            }
-        }
+              toggleMenu(index);
+              setSelectedTable(table);
+            }}
           >
             {table.number}
-            <Menu
-              open={openMenus[index] || false}
-              anchorEl={menuRefs.current[index]}
-              onClose={() => toggleMenu(index)}
-            >
+            <Menu open={openMenus[index] || false} anchorEl={menuRefs.current[index]} onClose={() => toggleMenu(index)}>
               <MenuItem>
-              <IconButton onClick={handleDelete}>
-                <DeleteIcon/>
-              </IconButton>
+                <IconButton onClick={handleDelete}>
+                  <DeleteIcon />
+                </IconButton>
               </MenuItem>
             </Menu>
           </div>
         </ButtonBase>
       ))}
+      <Button variant='contained' style={{color: 'red'}} onClick={handleAddTable}>Add table</Button>
+
+      <Modal open={isModalOpen} onClose={handleModalClose}>
+        <div className="modal-content">
+          <TextField
+            type='number'
+            label="Table Number"
+            variant="outlined"
+            value={newTableNumber}
+            onChange={handleTableNumberChange}
+          />
+          <Button onClick={handleAddTableConfirm} variant='contained' style={{color: 'green'}}>Add</Button>
+        </div>
+      </Modal>
     </div>
   );
 };

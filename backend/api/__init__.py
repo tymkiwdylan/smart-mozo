@@ -35,7 +35,10 @@ def create_test_app():
 def create_app():
 
     app = Flask(__name__)
-    CORS(app)
+    CORS(app, origins="*")
+    CORS(app, methods=["GET", "POST", "PUT", "DELETE"])
+    CORS(app, allow_headers=["Content-Type", "Authorization"])
+
     app.config['SECRET_KEY'] = 'secret'
     app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{DB_NAME}'
     # Configure JWT settings
