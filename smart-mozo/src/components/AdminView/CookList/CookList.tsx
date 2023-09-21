@@ -65,7 +65,7 @@ const ItemList: React.FC<Props> = ({ items, onDeleteItem, onEditItem, onAddItem 
             }}
             style={{ marginBottom: '10px' }}
         >
-        Nuevo Cocinero
+        Nueva Cocina
       </Button>
       <List>
         {items.map(item => (
@@ -75,7 +75,6 @@ const ItemList: React.FC<Props> = ({ items, onDeleteItem, onEditItem, onAddItem 
                 <ListItemText
                   primary={item.name}
                 />
-                <ListItemText primary={'Mesas: 1, 7, 12'} />
               </CardContent>
               <ListItemSecondaryAction>
                 <IconButton edge="end" aria-label="edit" onClick={() => handleEditItem(item)}>

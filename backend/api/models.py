@@ -30,7 +30,8 @@ class Admin(db.Model):
     email = db.Column(db.String(100), unique=True)
     password = db.Column(db.String(100))
     permission = db.Column(db.Integer) #0: Full permission, 1: View and change, 2: View Only
-    api_token = db.Column(db.String(16))
+    api_token = db.Column(db.String(16)) #Delete this later
+    #TODO: Add a column for the opening and closing time of the restaurant
     
     def serialize(self):
         data = {
@@ -231,5 +232,9 @@ class Table(db.Model):
             'restaurant_id': self.restaurant_id,
         }
         return data
+    
+    
+    
+#TODO: Add a table for ingredients and a table for categories
     
     

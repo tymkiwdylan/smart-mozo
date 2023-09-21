@@ -15,7 +15,7 @@ interface PageContainerProps {
 const PageContainer: React.FC<PageContainerProps> = ({ title, children }) => {
   // Set the static image you want to use for the button
 
-  const dropdownOptions = [<Option text='staff' path='/admin/staff/'/>];
+  const dropdownOptions = [<Option text='staff' path='/admin/staff/'/>, <Option text='restaurant' path='/admin/'/>, <Option text='Cocina' path='/cook/'/>];
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
@@ -77,7 +77,7 @@ const PageContainer: React.FC<PageContainerProps> = ({ title, children }) => {
                 {option}
               </MenuItem>
             ))}
-            <MenuItem onClick={handleLogout}>Logout</MenuItem>
+            <MenuItem onClick={handleLogout}> <Option text='Logout' path='#'/> </MenuItem>
           </Menu>
         </Toolbar>
       </AppBar>
