@@ -1,14 +1,15 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify
-from api import db
-from api.models import Admin, Restaurant
+from api import db, user_db
+from api.models import Admin, Restaurant, Restaurants
 from flask_login import login_required, current_user, login_user, logout_user
 from werkzeug.security import generate_password_hash, check_password_hash
 import secrets
 from flask_jwt_extended import create_access_token, jwt_required
+import psycopg2
+import os
 
 
 auth = Blueprint('auth', __name__)
-
 
 @auth.route('/create-restaurant', methods=['POST'])
 def create_restaurant():
@@ -21,12 +22,13 @@ def create_restaurant():
     account_id = data['account_id']
     restaurant_name = data['restaurant_name']
     
-    restaurant = Restaurant.query.filter_by(account_id=account_id).first()
+    restaurant = Restaurants.query.filter_by(account_id=account_id).first()
     
     if restaurant:
         return {'message': 'Restaurant already exists'}, 400
-    
-    new_restaurant = Restaurant(restaurant_name=restaurant_name, account_id=account_id)
+
+        
+    new_restaurant = Restaurants(account_id=account_id, restaurant_name=restaurant_name)
     
     db.session.add(new_restaurant)
     db.session.commit()

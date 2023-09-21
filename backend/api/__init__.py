@@ -8,10 +8,12 @@ from dotenv import load_dotenv
 from flask_cors import CORS
 from flask_socketio import SocketIO
 from flask_jwt_extended import JWTManager
+import psycopg2
 load_dotenv()
 
 
 db = SQLAlchemy()
+user_db = SQLAlchemy()
 DB_NAME = "database.db"
 socket_io = SocketIO()
 def create_test_app():
@@ -40,7 +42,7 @@ def create_app():
     CORS(app, allow_headers=["Content-Type", "Authorization"])
 
     app.config['SECRET_KEY'] = 'secret'
-    app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{DB_NAME}'
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:P1zM6TbIZGT0OAP@localhost:5432'
     # Configure JWT settings
     app.config['JWT_SECRET_KEY'] = 'your-secret-key'  # Change this to a secure key
     app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(hours=48)  # Set token expiration

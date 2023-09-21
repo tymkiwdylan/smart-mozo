@@ -1,4 +1,5 @@
 from api import db
+from api import user_db
 
 class SuperAdmin(db.Model): #This is for later
     id = db.Column(db.Integer, primary_key = True)
@@ -7,23 +8,23 @@ class SuperAdmin(db.Model): #This is for later
     password = db.Column(db.String(100))
     
 
-class Client(db.Model):
-    id = db.Column(db.Integer, primary_key = True)
-    restaurant_id = db.Column(db.Integer, db.ForeignKey('restaurant.id'))
-    name = db.Column(db.String(100))
-    table = db.Column(db.Integer)
+# class Client(db.Model):
+#     id = db.Column(db.Integer, primary_key = True)
+#     restaurant_id = db.Column(db.Integer, db.ForeignKey('restaurant.id'))
+#     name = db.Column(db.String(100))
+#     table = db.Column(db.Integer)
     
-    def serialize(self):
-        data = {
-            'id': self.id,
-            'restaurant_id': self.restaurant_id,
-            'name': self.name,
-            'table': self.table,
-        }
+#     def serialize(self):
+#         data = {
+#             'id': self.id,
+#             'restaurant_id': self.restaurant_id,
+#             'name': self.name,
+#             'table': self.table,
+#         }
         
-        return data
+#         return data
         
-class Admin(db.Model):
+class Admin(user_db.Model):
     id = db.Column(db.Integer, primary_key = True)
     restaurant_id = db.Column(db.Integer, db.ForeignKey('restaurant.id'))
     username = db.Column(db.String(100), unique=True)
@@ -45,8 +46,13 @@ class Admin(db.Model):
         
         return data
     
+class Restaurants(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    restaurant_name = db.Column(db.String(100))
+    account_id = db.Column(db.String(20))
+    
 
-class Restaurant(db.Model): #Todo: Add menu Categories and add a category column to the menu
+class Restaurant(user_db.Model): #Todo: Add menu Categories and add a category column to the menu
     id = db.Column(db.Integer, primary_key=True)
     restaurant_name = db.Column(db.String(100))
     menu = db.relationship('Menu')
@@ -128,7 +134,7 @@ class Restaurant(db.Model): #Todo: Add menu Categories and add a category column
         }
         return data
         
-class Menu(db.Model):
+class Menu(user_db.Model):
     id = db.Column(db.Integer, primary_key=True)
     restaurant_id = db.Column(db.Integer, db.ForeignKey('restaurant.id'))
     plate = db.Column(db.String(100))
@@ -147,7 +153,7 @@ class Menu(db.Model):
         }
 
         return data
-class Transaction(db.Model):
+class Transaction(user_db.Model):
     id = db.Column(db.Integer, primary_key= True)
     restaurant_id = db.Column(db.Integer, db.ForeignKey('restaurant.id'))
     product_id = db.Column(db.Integer) #TODO: change into a String and call description
@@ -169,7 +175,7 @@ class Transaction(db.Model):
         return data
     
 
-class Waiter(db.Model):
+class Waiter(user_db.Model):
     id = db.Column(db.Integer, primary_key=True)
     restaurant_id = db.Column(db.Integer, db.ForeignKey('restaurant.id'))
     name = db.Column(db.String(50))
@@ -206,7 +212,7 @@ class Waiter(db.Model):
         }
         return data
     
-class Cook(db.Model):
+class Cook(user_db.Model):
     id = db.Column(db.Integer, primary_key=True)
     restaurant_id = db.Column(db.Integer, db.ForeignKey('restaurant.id'))
     name = db.Column(db.String(50))
@@ -219,7 +225,7 @@ class Cook(db.Model):
         }
         return data
 
-class Table(db.Model):
+class Table(user_db.Model):
     id = db.Column(db.Integer, primary_key=True)
     number = db.Column(db.Integer)
     restaurant_id = db.Column(db.Integer, db.ForeignKey('restaurant.id'))

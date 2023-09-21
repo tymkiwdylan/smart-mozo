@@ -129,5 +129,5 @@ def get_restaurant(restaurant_id):
     
     data = restaurant.serialize()
     
-    return {'message': 'sueccess', 'data': data}, 200
+    return {'message': 'success', 'data': data}, 200
 

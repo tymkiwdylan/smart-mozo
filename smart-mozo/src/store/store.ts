@@ -15,8 +15,6 @@ const persistConfig = {
   storage,
 };
 
-// Create a socket instance
-
 
 export const store = configureStore({
   reducer: {

@@ -46,7 +46,9 @@ const CreateRestaurant: React.FC = () => {
         const response: any = await sendPostRequest(formData, 'auth/create-restaurant');     
         const restaurant_id = response['data']['id'];
 
-        await dispatch(fetchRestaurantData(restaurant_id));
+        console.log(restaurant_id)
+
+        dispatch(fetchRestaurantData(restaurant_id));
         navigate(`/crear-admin`);
       
     } catch (error) {

@@ -29,8 +29,7 @@ const useStyles = makeStyles(() => ({
 
 const CreateAdmin: React.FC<{ restaurant_id: number|undefined }> = ({ restaurant_id }) => {
   const navigate = useNavigate();
-  const classes = useStyles();
-  
+  const classes = useStyles(); 
   const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
