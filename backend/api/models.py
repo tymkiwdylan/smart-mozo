@@ -30,7 +30,8 @@ class Admin(db.Model):
     email = db.Column(db.String(100), unique=True)
     password = db.Column(db.String(100))
     permission = db.Column(db.Integer) #0: Full permission, 1: View and change, 2: View Only
-    api_token = db.Column(db.String(16))
+    api_token = db.Column(db.String(16)) #Delete this later
+    #TODO: Add a column for the opening and closing time of the restaurant
     
     def serialize(self):
         data = {
@@ -45,11 +46,11 @@ class Admin(db.Model):
         return data
     
 
-class Restaurant(db.Model):
+class Restaurant(db.Model): #Todo: Add menu Categories and add a category column to the menu
     id = db.Column(db.Integer, primary_key=True)
     restaurant_name = db.Column(db.String(100))
     menu = db.relationship('Menu')
-    transactions = db.relationship('Transaction') #TODO: Think about changing this to be Orders instead of transactions
+    transactions = db.relationship('Transaction')
     waiters = db.relationship('Waiter')
     cooks  = db.relationship('Cook')
     tables = db.relationship('Table')
@@ -166,6 +167,7 @@ class Transaction(db.Model):
             'waiter': self.waiter
         }
         return data
+    
 
 class Waiter(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -175,6 +177,7 @@ class Waiter(db.Model):
     password = db.Column(db.String(50))
     transactions = db.relationship('Transaction')
     account_id = db.Column(db.String(30))
+    tables = db.relationship('Table')
     
     def get_transactions(self):
         transactions = []
@@ -184,6 +187,14 @@ class Waiter(db.Model):
             
         return transactions
     
+    def get_tables(self):
+        tables = []
+        
+        for table in self.tables:
+            tables.append(table.serialize());
+            
+        return tables
+    
     def serialize(self):
         data = {
             'id': self.id,
@@ -191,6 +202,7 @@ class Waiter(db.Model):
             'email': self.email,
             'name': self.name,
             'transactions': self.get_transactions(),
+            'tables': self.get_tables(),
         }
         return data
     
@@ -209,25 +221,20 @@ class Cook(db.Model):
 
 class Table(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    number = db.Column(db.Integer)
     restaurant_id = db.Column(db.Integer, db.ForeignKey('restaurant.id'))
+    waiter_id = db.Column(db.Integer, db.ForeignKey('waiter.id'))
     
     def serialize(self):
         data = {
             'id': self.id,
+            'number': self.number,
             'restaurant_id': self.restaurant_id,
         }
         return data
     
     
     
-_all__ = [
-    "SuperAdmin",
-    "Client",
-    "Admin",
-    "Restaurant",
-    "Menu",
-    "Transaction",
-    "Waiter",
-    "Cook",
-    "Table",
-]
+#TODO: Add a table for ingredients and a table for categories
+    
+    

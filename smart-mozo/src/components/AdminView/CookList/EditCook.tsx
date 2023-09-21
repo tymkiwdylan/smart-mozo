@@ -6,7 +6,7 @@ import {
   TextField,
   Button,
 } from "@mui/material";
-import { useAppSelector } from "../../store/hooks";
+import { useAppSelector } from "../../../store/hooks";
 
 interface PlateFormProps {
   open: boolean;
@@ -80,8 +80,8 @@ const EditMenu: React.FC<PlateFormProps> = ({
       alignItems: 'center',
       justifyContent: 'center',
        }}>
-      <Box sx={{ p: 3, bgcolor: 'background.paper', borderRadius: 4 }}>
-        <h2>{cook ? 'Editar Cocinero' : 'Nuevo Cocinero'}</h2>
+      <Box sx={{ p: 3, bgcolor: 'background.paper', borderRadius: 4, minWidth: '400px' }}>
+        <h2>{cook ? 'Editar Cocina' : 'Nueva Cocina'}</h2>
         <form onSubmit={handleSubmit}>
           <Grid container spacing={2}>
             <Grid item xs={12} sm={8} md={8}>

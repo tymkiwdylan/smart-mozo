@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Button, FormControl, FormHelperText, Grid, Input, InputLabel, Paper, Typography } from '@mui/material';
 import { makeStyles } from '@mui/styles';
-import { sendPostRequest } from '../../api/apiUtils';
+import { sendPostRequest } from '../../../api/apiUtils';
 import { useNavigate } from 'react-router-dom';
 
 const useStyles = makeStyles(() => ({
@@ -86,7 +86,7 @@ const CreateMenu: React.FC<{ restaurant_id: number|undefined }> = ({ restaurant_
                 <Typography> Subir archivo excel o .csv </Typography>
               </Grid>
               <Grid item xs={4}>
-                <a href= {`http://127.0.0.1:5000/api/get-menu-template/${restaurant_id}`}>
+                <a href= {`http://127.0.0.1:5000/api/menu/get-menu-template/${restaurant_id}`}>
                   Ejemplo.xslx
                 </a>
               </Grid>

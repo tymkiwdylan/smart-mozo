@@ -11,7 +11,7 @@ import {
   TextareaAutosize
 } from "@mui/material";
 import { AddPhotoAlternate } from "@mui/icons-material";
-import { useAppSelector } from "../../store/hooks";
+import { useAppSelector } from "../../../store/hooks";
 
 interface PlateFormProps {
   open: boolean;

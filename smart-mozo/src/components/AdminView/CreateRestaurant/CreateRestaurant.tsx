@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { TextField, Button, Grid, Paper, Typography } from '@mui/material';
 import { makeStyles } from '@mui/styles';
-import { sendPostRequest } from '../../api/apiUtils';
+import { sendPostRequest } from '../../../api/apiUtils';
 import { useNavigate } from 'react-router-dom';
-import { useAppDispatch } from '../../store/hooks';
-import { fetchRestaurantData } from '../../store/restaurantActions';
+import { useAppDispatch } from '../../../store/hooks';
+import { fetchRestaurantData } from '../../../store/restaurantActions';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -43,7 +43,7 @@ const CreateRestaurant: React.FC = () => {
     };
 
     try {
-        const response: any = await sendPostRequest(formData, 'create-restaurant');     
+        const response: any = await sendPostRequest(formData, 'auth/create-restaurant');     
         const restaurant_id = response['data']['id'];
 
         await dispatch(fetchRestaurantData(restaurant_id));

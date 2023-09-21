@@ -1,23 +1,23 @@
 import React, { useState } from 'react';
 import { List, ListItem, ListItemText, ListItemSecondaryAction, IconButton, Card, CardContent, Box, Button } from '@mui/material';
 import { Edit, Delete, Add } from '@mui/icons-material';
-import EditCook from './EditCook';
-import { sendPostRequest } from '../../api/apiUtils';
+import EditWaiter from './EditWaiter';
+import { sendPostRequest } from '../../../api/apiUtils';
 
 
 interface Props {
-  items: Cook[];
-  onDeleteItem: (item: Cook) => void;
-  onEditItem: (item: Cook) => void;
-  onAddItem: (item: Cook) => void;
+  items: Waiter[];
+  onDeleteItem: (item: Waiter) => void;
+  onEditItem: (item: Waiter) => void;
+  onAddItem: (item: Waiter) => void;
 }
 
 const ItemList: React.FC<Props> = ({ items, onDeleteItem, onEditItem, onAddItem }) => {
   const [openModal, setOpenModal] = useState(false);
-  const [selectedItem, setSelectedItem] = useState<Cook | null>(null);
+  const [selectedItem, setSelectedItem] = useState<Waiter | null>(null);
   const [isNewItem, setIsNewItem] = useState(false);
 
-  const handleEditItem = (item: Cook|null) => {
+  const handleEditItem = (item: Waiter|null) => {
     setSelectedItem(item);
     setOpenModal(true);
   };
@@ -30,10 +30,9 @@ const ItemList: React.FC<Props> = ({ items, onDeleteItem, onEditItem, onAddItem 
   const handleSubmit = async (formData: any) => {
     //Send formData to backend
     try {
-      const response = await sendPostRequest(formData, 'cook/add-cook');
-      console.log(isNewItem);
+      const response = await sendPostRequest(formData, 'waiter/add-waiter');
+
       if (isNewItem) {
-        console.log('Adding new cook: ', response.data);
         onAddItem(response.data);
         setIsNewItem(false);
       }
@@ -65,7 +64,7 @@ const ItemList: React.FC<Props> = ({ items, onDeleteItem, onEditItem, onAddItem 
             }}
             style={{ marginBottom: '10px' }}
         >
-        Nuevo Cocinero
+        Nuevo Mozo
       </Button>
       <List>
         {items.map(item => (
@@ -74,8 +73,9 @@ const ItemList: React.FC<Props> = ({ items, onDeleteItem, onEditItem, onAddItem 
               <CardContent>
                 <ListItemText
                   primary={item.name}
+                  secondary={`email: ${item.email}`}
                 />
-                <ListItemText primary={'Mesas: 1, 7, 12'} />
+                <ListItemText primary={`tables ${item.tables.map(table => table.number)}`} />
               </CardContent>
               <ListItemSecondaryAction>
                 <IconButton edge="end" aria-label="edit" onClick={() => handleEditItem(item)}>
@@ -90,7 +90,7 @@ const ItemList: React.FC<Props> = ({ items, onDeleteItem, onEditItem, onAddItem 
         ))}
       </List>
         
-      <EditCook open={openModal} onClose={handleCloseModal} onSubmit={handleSubmit} cook={selectedItem} />
+      <EditWaiter open={openModal} onClose={handleCloseModal} onSubmit={handleSubmit} waiter={selectedItem} />
 
     </Box>
   );

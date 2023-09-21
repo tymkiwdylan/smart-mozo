@@ -1,16 +1,19 @@
 
+from datetime import timedelta
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from os import path
 import os
 from dotenv import load_dotenv
 from flask_cors import CORS
+from flask_socketio import SocketIO
+from flask_jwt_extended import JWTManager
 load_dotenv()
 
 
 db = SQLAlchemy()
 DB_NAME = "database.db"
-
+socket_io = SocketIO()
 def create_test_app():
 
     app = Flask(__name__)
@@ -32,11 +35,21 @@ def create_test_app():
 def create_app():
 
     app = Flask(__name__)
-    CORS(app)
+    CORS(app, origins="*")
+    CORS(app, methods=["GET", "POST", "PUT", "DELETE"])
+    CORS(app, allow_headers=["Content-Type", "Authorization"])
+
     app.config['SECRET_KEY'] = 'secret'
     app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{DB_NAME}'
+    # Configure JWT settings
+    app.config['JWT_SECRET_KEY'] = 'your-secret-key'  # Change this to a secure key
+    app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(hours=48)  # Set token expiration
+    jwt = JWTManager(app)
+    
     db.init_app(app)
     
+    socket_io.init_app(app, cors_allowed_origins="*")
+
     from .models import SuperAdmin, Client, Admin, Restaurant, Menu, Transaction, Waiter, Cook, Table
     create_database(app)
 
@@ -54,10 +67,11 @@ def create_app():
     app.register_blueprint(auth, url_prefix='/api/auth/')
 
 
-    return app
+    return app, socket_io
 
 def create_database(app):
     if not (os.path.exists('/instance/database.db')):
         with app.app_context():
             db.create_all()
         print('Created Database!')
+        

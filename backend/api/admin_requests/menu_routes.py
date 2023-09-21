@@ -4,7 +4,7 @@ from api import db
 from .utils import save_file, isValidToken
 import pandas as pd
 import io
-
+from flask_jwt_extended import jwt_required
 
 menu_routes = Blueprint('menu_routes', __name__)
 
@@ -37,6 +37,7 @@ def update_menu(items, restaurant_id):
     
 
 @menu_routes.route('/edit-menu-item', methods=['POST'])
+@jwt_required()
 def edit_menu_item():
     """
     Edit or create a menu item.
@@ -63,7 +64,7 @@ def edit_menu_item():
     # Check if a file was included in the request
     if 'file' in request.files:
         file = request.files['file']
-        img = save_file(file)
+        img = save_file(file, request.url_root)
     
     if not plate:
         plate = Menu(plate=plate_name, description=description,
@@ -82,6 +83,7 @@ def edit_menu_item():
     
 
 @menu_routes.route('/create-menu', methods=['POST'])
+@jwt_required()
 def create_menu():
     """
     Create or update menu items from an Excel or CSV file.
@@ -95,7 +97,7 @@ def create_menu():
     # if (not isValidToken(token)):
     #     return {'message': 'NOT AUTHORIZED'}, 401
     
-    file = request.files['file']
+    file = request.files['file'] #TODO: FIX THE BUG
     restaurant_id = request.form['restaurant_id']
     
     if file and file.filename.endswith('.xlsx'):
@@ -116,6 +118,7 @@ def create_menu():
     return {'message': 'success'}, 201
     
 @menu_routes.route('/delete-menu-item', methods=['POST'])
+@jwt_required()
 def delete_menu_item():
     """
     Delete a menu item.

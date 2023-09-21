@@ -1,0 +1,10 @@
+.navBar {
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+    
+}
+
+.button {
+    color: #7fff00;
+}
