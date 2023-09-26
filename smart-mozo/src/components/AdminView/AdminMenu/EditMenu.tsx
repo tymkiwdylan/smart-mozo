@@ -26,6 +26,7 @@ interface PlateFormData {
   plateName: string;
   description: string;
   price: number;
+  category: string;
   image: File | string | null;
 }
 
@@ -45,6 +46,7 @@ const EditMenu: React.FC<PlateFormProps> = ({
     plateName: "",
     description: "",
     price: 0,
+    category: "",
     image: null
   });
 
@@ -56,6 +58,7 @@ const EditMenu: React.FC<PlateFormProps> = ({
         plateName: plate.plate,
         description: plate.description,
         price: plate.price,
+        category: plate.category,
         image: typeof plate.img === "string" ? plate.img : null
       });
     }
@@ -94,6 +97,7 @@ const EditMenu: React.FC<PlateFormProps> = ({
       plateName: "",
       description: "",
       price: 0,
+      category: "",
       image: null
     });
     onClose();
@@ -171,6 +175,16 @@ const EditMenu: React.FC<PlateFormProps> = ({
                 label="Precio"
                 name="price"
                 value={formData.price}
+                onChange={handleInputChange}
+                required
+              />
+            </Grid>
+            <Grid item xs={12} sm={12} md={12}>
+              <TextField
+                fullWidth
+                label="Categoría"
+                name="category"
+                value={formData.category}
                 onChange={handleInputChange}
                 required
               />

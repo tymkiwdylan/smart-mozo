@@ -1,5 +1,5 @@
 from flask import Blueprint, request, send_file
-from api.models import Menu
+from api.models import Menu, Ingridient
 from api import db
 from .utils import save_file, isValidToken
 import pandas as pd
@@ -46,9 +46,6 @@ def edit_menu_item():
         dict: JSON response with success message and data.
     """
     
-    # token = request.headers['Authorization']
-    # if (not isValidToken(token)):
-    #     return {'message': 'NOT AUTHORIZED'}, 401
     
     data = request.form
     
@@ -57,6 +54,8 @@ def edit_menu_item():
     price = data['price']
     id = data['id']
     restaurant_id = data['restaurant_id']
+    category = data['category'] #TODO: Add category to the menu items
+    
     
     plate = Menu.query.get(int(id))
 
@@ -69,13 +68,14 @@ def edit_menu_item():
     if not plate:
         plate = Menu(plate=plate_name, description=description,
                          price=price, restaurant_id=restaurant_id,
-                         img=img)
+                         img=img, category=category)
         db.session.add(plate)
     else:
         plate.plate = plate_name
         plate.description = description
         plate.price = price
         plate.img = img
+        plate.category = category
     
     db.session.commit()
     
@@ -91,11 +91,6 @@ def create_menu():
     Returns:
         dict: JSON response with success message.
     """
-    
-    # token = request.headers['Authorization']
-
-    # if (not isValidToken(token)):
-    #     return {'message': 'NOT AUTHORIZED'}, 401
     
     file = request.files['file'] #TODO: FIX THE BUG
     restaurant_id = request.form['restaurant_id']
@@ -127,11 +122,6 @@ def delete_menu_item():
         dict: JSON response with success message and data.
     """
     
-    # token = request.headers['Authorization']
-
-    # if (not isValidToken(token)):
-    #     return {'message': 'NOT AUTHORIZED'}, 401
-    
     data = request.get_json(force=True)
     
     id = data['id']
@@ -143,6 +133,69 @@ def delete_menu_item():
         db.session.commit()
     
     return {'message': 'success', 'data': {'id': id}}, 201
+
+@menu_routes.route('/add-ingridient', methods=['POST'])
+@jwt_required()
+def add_ingridient():
+    data = request.get_json(force=True)
+    restaurant_id = data['restaurant_id']
+    ingridient = data['ingridient']
+    
+    ingridient = Ingridient.query.filter_by(ingridient=ingridient, restaurant_id=restaurant_id).first()
+    
+    if ingridient:
+        return {'message': 'Ingridient already exists'}, 405
+    
+    
+    new_ingridient = Ingridient(ingridient=ingridient, restaurant_id=restaurant_id, amount=1)
+    db.session.add(new_ingridient)
+    
+    db.session.commit()
+    
+    return {'message': 'success'}, 201
+
+@menu_routes.route('/delete-ingridient', methods=['POST'])
+@jwt_required()
+def delete_ingridient():
+    data = request.get_json(force=True)
+    restaurant_id = data['restaurant_id']
+    ingridient = data['ingridient']
+    
+    ingridient = Ingridient.query.filter_by(ingridient=ingridient, restaurant_id=restaurant_id).first()
+    
+    if ingridient:
+        db.session.delete(ingridient)
+        db.session.commit()
+    
+    return {'message': 'success'}, 201
+    
+@menu_routes.route('/get-ingridients', methods=['POST'])
+@jwt_required()
+def get_ingridients():
+    data = request.get_json(force=True)
+    restaurant_id = data['restaurant_id']
+    
+    ingridients = Ingridient.query.filter_by(restaurant_id=restaurant_id).all()
+    
+    ingridients = [ingridient.serialize() for ingridient in ingridients]
+    
+    return {'message': 'success', 'data': ingridients}, 201
+
+@menu_routes.route('/edit-ingridient', methods=['POST'])
+@jwt_required()
+def edit_ingridient():
+    data = request.get_json(force=True)
+    restaurant_id = data['restaurant_id']
+    ingridient = data['ingridient']
+    amount = data['amount']
+    
+    ingridient = Ingridient.query.filter_by(ingridient=ingridient, restaurant_id=restaurant_id).first()
+    
+    if ingridient:
+        ingridient.amount = amount
+        db.session.commit()
+    
+    return {'message': 'success'}, 201
 
 @menu_routes.route('/get-menu-template/<id>', methods=['GET'])
 def get_menu_template(id): #TODO: Maybe just keep a template in the frontend?

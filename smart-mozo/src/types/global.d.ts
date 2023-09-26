@@ -11,7 +11,15 @@ declare global {
     waiters: Waiter[];
     cooks: Cook[];
     tables: Table[];
+    ingridients: Ingridient[]
     
+  }
+
+  interface Ingridient {
+    id: number;
+    restaurant_id: number;
+    ingridient: string;
+    amount: number;
   }
 
   interface MenuItem {
@@ -19,6 +27,7 @@ declare global {
     restaurant_id: number;
     plate: string;
     description: string;
+    category: string;
     price: number;
     img: string;
   }

@@ -36,6 +36,7 @@ const ItemList: React.FC<Props> = ({ items, onDeleteItem, onEditItem, onAddItem 
     data.append('price', formData.price);
     data.append('restaurant_id', formData.restaurant_id);
     data.append('id', formData.id);
+    data.append('category', formData.category);
     try {
       const response = await sendPostRequest(data, 'menu/edit-menu-item');
 

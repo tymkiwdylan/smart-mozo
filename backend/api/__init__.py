@@ -40,7 +40,7 @@ def create_app():
     CORS(app, allow_headers=["Content-Type", "Authorization"])
 
     app.config['SECRET_KEY'] = 'secret'
-    app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{DB_NAME}'
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:P1zM6TbIZGT0OAP@localhost:5432'
     # Configure JWT settings
     app.config['JWT_SECRET_KEY'] = 'your-secret-key'  # Change this to a secure key
     app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(hours=48)  # Set token expiration

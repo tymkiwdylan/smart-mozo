@@ -55,6 +55,7 @@ class Restaurant(db.Model): #Todo: Add menu Categories and add a category column
     cooks  = db.relationship('Cook')
     tables = db.relationship('Table')
     admins = db.relationship('Admin')
+    ingridients = db.relationship('Ingridient')
     account_id = db.Column(db.String(20))
     
     def get_menu(self):
@@ -105,6 +106,14 @@ class Restaurant(db.Model): #Todo: Add menu Categories and add a category column
             
         return tables
     
+    def get_ingridients(self):
+        ingridients = []
+        
+        for ingridient in self.ingridients:
+            ingridients.append(ingridient.serialize());
+            
+        return ingridients
+    
     
     def serialize(self):
         data = {
@@ -115,7 +124,8 @@ class Restaurant(db.Model): #Todo: Add menu Categories and add a category column
             'waiters': self.get_waiters(),
             'cooks': self.get_cooks(),
             'tables': self.get_tables(),
-            'admins': self.get_admins()      
+            'admins': self.get_admins(),
+            'ingridients': self.get_ingridients()
         }
         return data
     
@@ -131,6 +141,7 @@ class Restaurant(db.Model): #Todo: Add menu Categories and add a category column
 class Menu(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     restaurant_id = db.Column(db.Integer, db.ForeignKey('restaurant.id'))
+    category = db.Column(db.String(100))
     plate = db.Column(db.String(100))
     description = db.Column(db.String(250))
     price = db.Column(db.Integer)
@@ -141,6 +152,7 @@ class Menu(db.Model):
             'id': self.id,
             'restaurant_id': self.restaurant_id,
             'plate': self.plate,
+            'category': self.category,
             'description': self.description,
             'price': self.price,
             'img': self.img
@@ -235,6 +247,18 @@ class Table(db.Model):
     
     
     
-#TODO: Add a table for ingredients and a table for categories
+class Ingridient(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    ingridient = db.Column(db.String(100))
+    amount = db.Column(db.Integer)
+    restaurant_id = db.Column(db.Integer, db.ForeignKey('restaurant.id'))
     
+    def serialize(self):
+        data = {
+            'id': self.id,
+            'ingridient': self.ingridient,
+            'amount': self.amount,
+            'restaurant_id': self.restaurant_id,
+        }
+        return data
     

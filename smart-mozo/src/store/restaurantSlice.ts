@@ -15,6 +15,7 @@ const initialState: RestaurantState = {
     waiters: [],
     cooks: [],
     tables: [],
+    ingridients: [],
   },
   token: '',
 };
