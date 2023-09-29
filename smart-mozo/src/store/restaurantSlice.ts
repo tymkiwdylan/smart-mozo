@@ -71,7 +71,6 @@ const restaurantSlice = createSlice({
         JSON.stringify(state.restaurant)
       );
     },
-
     setWaiterTables: (state, action: PayloadAction<{ waiterId: number, tables: Table[] }>) => {
       const { waiterId, tables } = action.payload;
       const waiter = state.restaurant.waiters.find(w => w.id === waiterId);

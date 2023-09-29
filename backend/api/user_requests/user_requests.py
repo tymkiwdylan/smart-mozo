@@ -43,5 +43,16 @@ def on_order_prepared(data):
     emit('prepared-order', data, room=room)
     print('order prepared: ', data)
     
+@socket_io.on('new-customer')
+def on_new_customer(data):
+    print(data)
+    room = str(data['restaurant_id']) + 'cashier'
+    emit('new-customer', data, room = room)
+    
+@socket_io.on('add-cart')
+def on_add_cart(data):
+    room = str(data['restaurant_id']) + 'cashier'
+    emit('add-cart', data, room = room)
+    
     
     

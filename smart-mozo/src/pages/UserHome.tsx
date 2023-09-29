@@ -27,19 +27,28 @@ const HomePage: React.FC = () => {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null); // For controlling the dropdown menu
     const [notes, setNotes] = useState(''); // This is the notes that the user has added to the order
     const [openConfirm, setOpenConfirm] = useState(false); // For controlling the confirm order modal
-
-    console.log(name);
+    const [tableNumber, setTableNumber] = useState<null|number>(null);
+    const [customer_id, setCustomerId] = useState<string>('');
+    const [cartList, setCart] = useState<MenuItem[]>([]); //Make sure this persists
 
     useEffect(() => {
         fetch(`http://127.0.0.1:5000/api/user/get-rest/${restaurant_id}`)
         .then((response) => response.json())
-        .then((data) => setItems(data['data'].menu));
+        .then((data) => {
+                        setItems(data['data'].menu);
+                        let table: Table = data['data'].tables.find((table: Table) => table.id === parseFloat(table_id as string));
+                        console.log(table);
+                        setTableNumber(table.number);
+                       });
 
         if (name.length === 0) {
             setOpenModal(true);
         }
 
-    }, [restaurant_id, table_id]);
+        
+    },[restaurant_id]);
+
+    
 
     const handleAddClick = (menuItem: MenuItem) => {
         setOrderList((prevOrderList) => [...prevOrderList, menuItem]);
@@ -68,15 +77,24 @@ const HomePage: React.FC = () => {
     const handleConfirm = () => {
         // Send the order to the backend
         counter += 1;
-        dispatch(socketActions.sendOrder({restaurant_id: parseFloat(restaurant_id as string),
-                                          table_id: parseFloat(table_id as string),
-                                          items: orderList,
-                                          notes: notes,
-                                          name: name,
-                                          status: 'pending',
-                                          id: counter}));
-        
+        const orderToSend = {restaurant_id: parseFloat(restaurant_id as string),
+            table_id: parseFloat(table_id as string),
+            items: orderList,
+            customer_id: customer_id,
+            table_number: tableNumber as number,
+            notes: notes,
+            name: name,
+            status: 'pending',
+            id: counter};
+        const cart: Cart = {customer_id: customer_id,
+            table_id: parseFloat(table_id as string),
+            items: orderList,
+            restaurant_id: parseFloat(restaurant_id as string)};
+        dispatch(socketActions.sendOrder(orderToSend));
+        dispatch(socketActions.addToCart(cart));
         // Reset the order list
+        const newCart = [...cartList, ...orderList];
+        setCart(newCart);
         setOrderList([]);
         setOpenConfirm(false);
     }
@@ -112,8 +130,15 @@ const HomePage: React.FC = () => {
             </BottomNavigation>
             <InputModal open={openModal} onAccept={(name) => {
                 dispatch(setOrderName(name));
-                setName(name); // Set the name of the order
+                const newCustomer: Customer = {id: tableNumber + name, name: name, restaurant_id: parseFloat(restaurant_id as string), table_id: parseFloat(table_id as string) };
+
+                if (tableNumber && name){
+                    dispatch(socketActions.newCustomer(newCustomer));
+                }
+                setName(name); // Set the name of the order'
+                setCustomerId(tableNumber + name);
                 setOpenModal(false);
+                
             }} />
         </div>
     );

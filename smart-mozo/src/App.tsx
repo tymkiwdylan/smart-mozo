@@ -16,6 +16,7 @@ import CookView from "./components/AdminView/CookView/CookView";
 import LoginPage from "./pages/Login";
 import ProtectedRoute from "./components/AdminView/ProtectedRoute/ProtectedRoute";
 import Staff from "./pages/Staff";
+import CashierPage from "./pages/CashierPage";
 const useStyles = makeStyles({
   app: {
     width: '100vw',
@@ -50,6 +51,7 @@ function App() {
               <Route path='/waiter/' element={<ProtectedRoute allowedTypes={[]}> <OrderView/> </ProtectedRoute> }/>
               <Route path='/cook/' element={<ProtectedRoute allowedTypes={[]}> <CookView/> </ProtectedRoute>}/>
               <Route path ='/admin/login' element={<LoginPage/>}/>
+              <Route path="/cash" element= {<CashierPage/>}/>
             </Routes>
           </Router>
         </div>

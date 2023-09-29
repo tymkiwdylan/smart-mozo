@@ -30,7 +30,15 @@ const socketMiddleware: Middleware = store => {
     socket.on('prepared-order', (data: any) => {
         console.log('We are sending the order to the waiter');
         store.dispatch(socketActions.passOrdertoWaiter(data));
-        // store.dispatch(socketActions.deleteKitchenOrder(0)); //This is wrong but let's see
+    });
+
+    socket.on('new-customer', (data: any) => {
+      console.log('sending to cashier');
+        store.dispatch(socketActions.addCustomer(data))
+    });
+    
+    socket.on('add-cart', (data: any) => {
+      store.dispatch(socketActions.recieveCartItem(data));
     });
 
     }
@@ -45,6 +53,14 @@ const socketMiddleware: Middleware = store => {
 
     if (socketActions.passOrder.match(action) && isConnectionEstablished) {
       socket.emit('prepared-order', action.payload);
+    }
+
+    if (socketActions.newCustomer.match(action) && isConnectionEstablished){
+      socket.emit('new-customer', action.payload);
+    }
+
+    if (socketActions.addToCart.match(action) && isConnectionEstablished){
+      socket.emit('add-cart', action.payload);
     }
 
     

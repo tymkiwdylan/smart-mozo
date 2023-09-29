@@ -56,10 +56,26 @@ declare global {
     id: number;
     restaurant_id: number;
     table_id: number;
+    customer_id: string;
+    table_number: number;
     name: string;
     status: string;
     items: MenuItem[];
     notes: string;
+  }
+
+  interface Cart{
+    restaurant_id: number;
+    table_id: number;
+    customer_id: string;
+    items: MenuItem[];
+  }
+
+  interface Customer {
+    restaurant_id: number;
+    id: string;
+    table_id: number;
+    name: string;
   }
 
 }
